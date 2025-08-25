@@ -80,22 +80,33 @@
 </div>
 
 
-  <!-- Step 4 -->
-  <div class="step hidden" id="s4">
-    <h2>Step 4: Add a touch of lace</h2>
-    <div class="grid">
-      <div class="option" data-value="Lace" onclick="pick('lace', this)">
-        <img src="https://via.placeholder.com/150?text=Lace" alt="Lace" /><div>Lace</div>
-      </div>
-      <div class="option" data-value="Fabric Lace" onclick="pick('lace', this)">
-        <img src="https://via.placeholder.com/150?text=Fabric+Lace" alt="Fabric Lace" /><div>Fabric Lace</div>
-      </div>
+<!-- Step 4 -->
+<div class="step hidden" id="s4">
+  <h2>Step 4: Lace & Color</h2>
+
+  <!-- 레이스 타입 선택 -->
+  <div class="grid" id="laceGrid">
+    <div class="option" data-value="Lace" onclick="selectLace('Lace', this)">
+      <img src="https://via.placeholder.com/150?text=Lace" alt="Lace" /><div>Lace</div>
     </div>
-    <div class="actions">
-      <button class="circle-btn back" onclick="back(3)" aria-label="Back">←<span class="sr-only">Back</span></button>
-      <button class="circle-btn next" onclick="go(5)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    <div class="option" data-value="FabricLace" onclick="selectLace('FabricLace', this)">
+      <img src="https://via.placeholder.com/150?text=Fabric+Lace" alt="Fabric Lace" /><div>Fabric Lace</div>
     </div>
   </div>
+
+  <!-- 색상 칩 (레이스 선택 후 노출) -->
+  <div id="laceColors" class="color-chips hidden" role="radiogroup" aria-label="Lace colors"></div>
+
+  <!-- 네비: Back / 선택요약 / Next -->
+  <div class="actions">
+    <button class="circle-btn back" onclick="back(3)" aria-label="Back">←<span class="sr-only">Back</span></button>
+    <div id="laceSelectionNote" class="step-selection-note"></div>
+    <button class="circle-btn next" id="nextS4" onclick="go(5)" aria-label="Next" disabled>
+      →<span class="sr-only">Next</span>
+    </button>
+  </div>
+</div>
+
 
   <!-- Step 5 -->
   <div class="step hidden" id="s5">
