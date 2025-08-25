@@ -1,1 +1,14 @@
-
+  <style>
+    :root { --bg:#FEF7FC; --fg:#F08FB5; --card:#fff0f5; }
+    body { background:var(--bg); color:var(--fg); font-family:system-ui,-apple-system,Arial,sans-serif; margin:0; padding:24px; text-align:center; }
+    h1 { margin:0 0 8px; } .subtitle{margin:0 0 24px; opacity:.85;}
+    .step{background:var(--card); border:2px dashed var(--fg); border-radius:16px; padding:16px; margin:0 auto 16px; max-width:820px;}
+    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:12px; margin-top:12px;}
+    .option{border:2px solid transparent; border-radius:12px; padding:10px; cursor:pointer; background:#fff; color:inherit;}
+    .option.selected{border-color:var(--fg);} .option img{width:120px; height:120px; object-fit:cover; border-radius:12px; display:block; margin:0 auto 8px;}
+    input[type="text"], .text{width:min(560px,90%); padding:10px 12px; border:1px solid #ddd; border-radius:10px; color:inherit;}
+    .row{margin:10px 0;} .actions{margin-top:12px;}
+    button{background:var(--fg); color:#fff; border:none; border-radius:10px; padding:10px 16px; cursor:pointer;}
+    button:disabled{opacity:.5; cursor:default;}
+    .hidden{display:none!important;} .error { color:#b00020; margin-top:8px; }
+  </style>
