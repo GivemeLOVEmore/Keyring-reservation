@@ -48,22 +48,37 @@
     </div>
   </div>
 
-  <!-- Step 3 -->
-  <div class="step hidden" id="s3">
-    <h2>Step 3: Select your fabric style</h2>
-    <div class="grid">
-      <div class="option" data-value="Satin" onclick="pick('fabric', this)">
-        <img src="https://via.placeholder.com/150?text=Satin" alt="Satin" /><div>Satin</div>
-      </div>
-      <div class="option" data-value="Leopard" onclick="pick('fabric', this)">
-        <img src="https://via.placeholder.com/150?text=Leopard" alt="Leopard" /><div>Leopard</div>
-      </div>
+<!-- Step 3 -->
+<div class="step hidden" id="s3">
+  <h2>Step 3: Fabric & Color</h2>
+
+  <!-- 재질 선택 (그림/카드) -->
+  <div class="grid" id="fabricGrid">
+    <!-- 재질 카드는 그대로 두어도 OK. 클릭 시 selectFabric 호출 -->
+    <div class="option" data-value="Satin" onclick="selectFabric('Satin', this)">
+      <img src="https://via.placeholder.com/150?text=Satin" alt="Satin" /><div>Satin</div>
     </div>
-    <div class="actions">
-      <button class="circle-btn back" onclick="back(2)" aria-label="Back">←<span class="sr-only">Back</span></button>
-      <button class="circle-btn next" onclick="go(4)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    <div class="option" data-value="Leopard" onclick="selectFabric('Leopard', this)">
+      <img src="https://via.placeholder.com/150?text=Leopard" alt="Leopard" /><div>Leopard</div>
     </div>
   </div>
+
+  <!-- 색상 칩 패널 (재질 선택 후 노출) -->
+  <div id="fabricColors" class="color-chips hidden" role="radiogroup" aria-label="Fabric colors"></div>
+
+  <!-- 네비게이션: Back / (선택 결과) / Next -->
+  <div class="actions">
+    <button class="circle-btn back" onclick="back(2)" aria-label="Back">←<span class="sr-only">Back</span></button>
+
+    <!-- 선택 요약 문구(영문, 이탤릭, 본문색) -->
+    <div id="fabricSelectionNote" class="step-selection-note"></div>
+
+    <button class="circle-btn next" id="nextS3" onclick="go(4)" aria-label="Next" disabled>
+      →<span class="sr-only">Next</span>
+    </button>
+  </div>
+</div>
+
 
   <!-- Step 4 -->
   <div class="step hidden" id="s4">
@@ -228,7 +243,149 @@
       `;
     }
   });
-    
+   const FABRIC_CONFIG = {
+    Satin: {
+      id: 'Satin',
+      labelEn: 'Satin',
+      imageUrl: 'https://via.placeholder.com/150?text=Satin',
+      colors: [
+        { id: 'white',   labelEn: 'White',    imageUrl: 'https://via.placeholder.com/64/FFFFFF/000000?text= ', inStock: true  },
+        { id: 'skyblue', labelEn: 'Sky Blue', imageUrl: 'https://via.placeholder.com/64/87CEEB/000000?text= ', inStock: true  },
+        { id: 'lpink',   labelEn: 'Light Pink', imageUrl: 'https://via.placeholder.com/64/FFC0CB/000000?text= ', inStock: true }
+      ]
+    },
+    Leopard: {
+      id: 'Leopard',
+      labelEn: 'Leopard',
+      imageUrl: 'https://via.placeholder.com/150?text=Leopard',
+      colors: [
+        { id: 'default', labelEn: 'Default', imageUrl: 'https://via.placeholder.com/64/D2B48C/000000?text=L', inStock: true },
+        { id: 'pink',    labelEn: 'Pink',    imageUrl: 'https://via.placeholder.com/64/FFC0CB/000000?text=L', inStock: true },
+        { id: 'khaki',   labelEn: 'Khaki',   imageUrl: 'https://via.placeholder.com/64/6B8E23/000000?text=L', inStock: true }
+      ]
+    }
+  };
+
+  /** 재질 선택 */
+  function selectFabric(fabricKey, el) {
+    // 카드 선택 표시
+    const grid = document.getElementById('fabricGrid');
+    [...grid.querySelectorAll('.option')].forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+
+    // 상태 초기화 & 저장
+    state.fabric = fabricKey;
+    state.color  = ''; // 재질 바꾸면 색상 리셋
+
+    // 색상 칩 렌더링
+    renderColorChips(fabricKey);
+
+    // 선택 요약 문구/버튼 활성화 업데이트
+    updateSelectionNote();
+    refreshStep3Controls();
+  }
+
+  /** 색상 칩 렌더링 */
+  function renderColorChips(fabricKey) {
+    const panel = document.getElementById('fabricColors');
+    const cfg = FABRIC_CONFIG[fabricKey];
+    if (!cfg) return;
+
+    panel.innerHTML = cfg.colors.map(c => {
+      const disabledClass = c.inStock ? '' : ' disabled';
+      // 선택 상태
+      const isSelected = (state.colorId === c.id && state.fabric === fabricKey);
+      const selectedClass = isSelected ? ' selected' : '';
+
+      return `
+        <button
+          type="button"
+          class="color-chip${selectedClass}${disabledClass}"
+          data-fabric="${fabricKey}"
+          data-color="${c.id}"
+          ${c.inStock ? '' : 'disabled'}
+          role="radio"
+          aria-checked="${isSelected ? 'true' : 'false'}"
+          title="${cfg.labelEn} — ${c.labelEn}"
+        >
+          <img src="${c.imageUrl}" alt="${c.labelEn}" />
+        </button>
+      `;
+    }).join('');
+
+    panel.classList.remove('hidden');
+
+    // 이벤트 바인딩
+    panel.querySelectorAll('.color-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        const fabric = btn.dataset.fabric;
+        const colorId = btn.dataset.color;
+        selectColor(fabric, colorId);
+      });
+    });
+  }
+
+  /** 색상 선택 (단일 선택 라디오 동작) */
+  function selectColor(fabricKey, colorId) {
+    const cfg = FABRIC_CONFIG[fabricKey];
+    if (!cfg) return;
+    const color = cfg.colors.find(c => c.id === colorId);
+    if (!color || !color.inStock) return;
+
+    // 칩 선택 상태 토글
+    const panel = document.getElementById('fabricColors');
+    panel.querySelectorAll('.color-chip').forEach(btn => {
+      const on = (btn.dataset.color === colorId);
+      btn.classList.toggle('selected', on);
+      btn.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+
+    // 상태 저장(요약/전송용)
+    state.fabric   = fabricKey;                // 'Satin' | 'Leopard'
+    state.colorId  = colorId;                  // 'white' | ...
+    state.color    = color.labelEn;            // 'White' | ...
+    state.fabricEn = cfg.labelEn;              // 'Satin' | 'Leopard'
+
+    updateSelectionNote();
+    refreshStep3Controls();
+  }
+
+  /** Back–Next 사이 선택 요약 표시 (영문, 이탤릭, 본문색) */
+  function updateSelectionNote() {
+    const note = document.getElementById('fabricSelectionNote');
+    if (state.fabric && state.color) {
+      const fabricLabel = state.fabricEn || state.fabric;
+      const colorLabel  = state.color;
+      note.textContent = `${fabricLabel} — ${colorLabel}`;
+    } else {
+      note.textContent = '';
+    }
+  }
+
+  /** Step 3에서만 Next 버튼 활성/비활성 */
+  function refreshStep3Controls() {
+    const nextBtn = document.getElementById('nextS3');
+    if (!nextBtn) return;
+    // 색상 선택 전에는 비활성화
+    const ok = !!(state.fabric && state.color);
+    nextBtn.disabled = !ok;
+  }
+
+  /** 안전장치: Step 3 완료 요건 없으면 4로 못 넘어가게 */
+  const _goOrig = go; // 기존 go 보존
+  go = function(step) {
+    if (step === 4) {
+      // 재질+색상 필수
+      if (!state.fabric || !state.color) {
+        // 버튼은 비활성 처리되어 있으므로 보통 도달 안 함.
+        return; // 조용히 무시
+      }
+    }
+    _goOrig(step);
+    // 화면 전환 후 Step3 컨트롤 갱신
+    if (step === 3) refreshStep3Controls();
+  };  
   </script>
 </body>
 </html>
