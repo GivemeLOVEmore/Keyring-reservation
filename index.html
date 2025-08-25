@@ -397,6 +397,143 @@
     // 화면 전환 후 Step3 컨트롤 갱신
     if (step === 3) refreshStep3Controls();
   };  
+<script>
+  /* ============================
+   * Step 4: 레이스 설정(데이터)
+   * ============================ */
+  const LACE_CONFIG = {
+    Lace: {
+      id: 'Lace',
+      labelEn: 'Lace',
+      imageUrl: 'https://via.placeholder.com/150?text=Lace',
+      colors: [
+        { id: 'white', labelEn: 'White', imageUrl: 'https://via.placeholder.com/64/FFFFFF/000000?text= ', inStock: true },
+        { id: 'black', labelEn: 'Black', imageUrl: 'https://via.placeholder.com/64/000000/FFFFFF?text= ', inStock: true }
+      ]
+    },
+    FabricLace: {
+      id: 'FabricLace',
+      labelEn: 'Fabric Lace',
+      imageUrl: 'https://via.placeholder.com/150?text=Fabric+Lace',
+      colors: [
+        { id: 'white_satin',     labelEn: 'White Satin',      imageUrl: 'https://via.placeholder.com/64/FFFFFF/000000?text=F', inStock: true },
+        { id: 'black_satin',     labelEn: 'Black Satin',      imageUrl: 'https://via.placeholder.com/64/000000/FFFFFF?text=F', inStock: true },
+        { id: 'skyblue_satin',   labelEn: 'Sky Blue Satin',   imageUrl: 'https://via.placeholder.com/64/87CEEB/000000?text=F', inStock: true },
+        { id: 'lightpink_satin', labelEn: 'Light Pink Satin', imageUrl: 'https://via.placeholder.com/64/FFC0CB/000000?text=F', inStock: true }
+      ]
+    }
+  };
+
+  /* 레이스 타입 선택 */
+  function selectLace(laceKey, el) {
+    const grid = document.getElementById('laceGrid');
+    [...grid.querySelectorAll('.option')].forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+
+    // 상태 초기화 & 저장
+    state.laceType   = laceKey;                // 'Lace' | 'FabricLace'
+    state.lace       = (LACE_CONFIG[laceKey]?.labelEn) || laceKey;  // 요약/전송용 레이스 이름(영문)
+    state.laceColor  = '';
+    state.laceColorId = '';
+
+    // 색상 칩 렌더링
+    renderLaceChips(laceKey);
+
+    // 선택 요약/Next 버튼 상태 갱신
+    updateLaceSelectionNote();
+    refreshStep4Controls();
+  }
+
+  /* 색상 칩 렌더링 */
+  function renderLaceChips(laceKey) {
+    const panel = document.getElementById('laceColors');
+    const cfg = LACE_CONFIG[laceKey];
+    if (!cfg) return;
+
+    panel.innerHTML = cfg.colors.map(c => {
+      const disabledClass = c.inStock ? '' : ' disabled';
+      const isSelected = (state.laceColorId === c.id && state.laceType === laceKey);
+      const selectedClass = isSelected ? ' selected' : '';
+      return `
+        <button
+          type="button"
+          class="color-chip${selectedClass}${disabledClass}"
+          data-lace="${laceKey}"
+          data-color="${c.id}"
+          ${c.inStock ? '' : 'disabled'}
+          role="radio"
+          aria-checked="${isSelected ? 'true' : 'false'}"
+          title="${cfg.labelEn} — ${c.labelEn}"
+        >
+          <img src="${c.imageUrl}" alt="${c.labelEn}" />
+        </button>
+      `;
+    }).join('');
+
+    panel.classList.remove('hidden');
+
+    panel.querySelectorAll('.color-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        selectLaceColor(btn.dataset.lace, btn.dataset.color);
+      });
+    });
+  }
+
+  /* 색상 선택 (단일 선택) */
+  function selectLaceColor(laceKey, colorId) {
+    const cfg = LACE_CONFIG[laceKey];
+    if (!cfg) return;
+    const color = cfg.colors.find(c => c.id === colorId);
+    if (!color || !color.inStock) return;
+
+    const panel = document.getElementById('laceColors');
+    panel.querySelectorAll('.color-chip').forEach(btn => {
+      const on = (btn.dataset.color === colorId);
+      btn.classList.toggle('selected', on);
+      btn.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+
+    // 상태 저장(요약/전송용)
+    state.laceType    = laceKey;
+    state.lace        = cfg.labelEn;     // 'Lace' | 'Fabric Lace'
+    state.laceColorId = colorId;         // 'white' | 'black' | ...
+    state.laceColor   = color.labelEn;   // 'White' | 'Black' | 'Sky Blue Satin' ...
+
+    updateLaceSelectionNote();
+    refreshStep4Controls();
+  }
+
+  /* 가운데 선택 요약 표시 (영문, 이탤릭, 본문색) */
+  function updateLaceSelectionNote() {
+    const note = document.getElementById('laceSelectionNote');
+    if (state.lace && state.laceColor) {
+      note.textContent = `${state.lace} — ${state.laceColor}`;
+    } else {
+      note.textContent = '';
+    }
+  }
+
+  /* Step 4에서 Next 활성/비활성 */
+  function refreshStep4Controls() {
+    const nextBtn = document.getElementById('nextS4');
+    if (!nextBtn) return;
+    const ok = !!(state.lace && state.laceColor); // 레이스와 색상 모두 필수
+    nextBtn.disabled = !ok;
+  }
+
+  /* 안전장치: 색 미선택 시 5로 이동 차단 */
+  const _goOrig4 = go;
+  go = function(step) {
+    if (step === 5) {
+      if (!state.lace || !state.laceColor) {
+        return; // Next가 비활성이라 보통 못 옴. 혹시모를 호출 차단
+      }
+    }
+    _goOrig4(step);
+    if (step === 4) refreshStep4Controls();
+  };
+    
   </script>
 </body>
 </html>
