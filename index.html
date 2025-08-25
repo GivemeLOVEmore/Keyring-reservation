@@ -15,10 +15,7 @@
 
   <!-- Step 1 -->
   <div class="step" id="s1">
-    <h2>
-      <span class="step-num">Step 1</span>
-      <span class="step-desc">Personal Information (required)</span>
-    </h2>
+    <h2>Step 1: Personal Information (required)</h2>
     <div class="row"><input id="name" type="text" placeholder="Name" /></div>
     <div class="row"><input id="phone" type="text" placeholder="Phone Number" /></div>
     <div class="row"><input id="xid" type="text" placeholder="X ID" /></div>
@@ -218,6 +215,20 @@
     }
 
     show(1);
+    
+  // Step 헤더 자동 변환
+  document.querySelectorAll('.step h2').forEach(h2 => {
+    const parts = h2.textContent.split(':');
+    if (parts.length === 2) {
+      const stepNum = parts[0].trim();   // "Step 1"
+      const stepDesc = parts[1].trim();  // "Personal Information (required)"
+      h2.innerHTML = `
+        <span class="step-num">${stepNum}</span>
+        <span class="step-desc">${stepDesc}</span>
+      `;
+    }
+  });
+    
   </script>
 </body>
 </html>
