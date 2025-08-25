@@ -19,7 +19,7 @@ h1{ margin:0 0 8px; color:var(--fg); }
 .step-num {
   display:block;
   font-family: 'Moo Lah Lah', cursive;  /* ← 구글 폰트 이름 */
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 400; /* 이 폰트는 보통 굵기만 지원 */
   color: #F08FB5;
   margin-bottom: 6px;
