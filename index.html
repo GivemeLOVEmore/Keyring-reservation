@@ -17,7 +17,7 @@
 
   <!-- Step 1 -->
   <div class="step" id="s1">
-    <h2>Step 1: 주문자 정보를 입력해주세요</h2>
+    <h2>Step 1: Personal Information (required)</h2>
     <div class="row"><input id="name" type="text" placeholder="Name" /></div>
     <div class="row"><input id="phone" type="text" placeholder="Phone Number" /></div>
     <div class="row"><input id="xid" type="text" placeholder="X ID" /></div>
@@ -32,7 +32,7 @@
 
   <!-- Step 2 -->
   <div class="step hidden" id="s2">
-    <h2>Step 2: 마음에 드는 키링 모양을 선택하세요</h2>
+    <h2>Step 2: Pick your favorite keyring shape</h2>
     <div class="grid">
       <div class="option" data-value="Heart" onclick="pick('shape', this)">
         <img src="https://via.placeholder.com/150?text=Heart" alt="Heart" /><div>Heart</div>
@@ -52,7 +52,7 @@
 
   <!-- Step 3 -->
   <div class="step hidden" id="s3">
-    <h2>Step 3: 원단을 선택하고 색상을 골라주세요</h2>
+    <h2>Step 3: Select your fabric style</h2>
 
     <!-- 원단 선택 -->
     <div class="grid" id="fabricGrid">
@@ -79,7 +79,7 @@
 
   <!-- Step 4 -->
   <div class="step hidden" id="s4">
-    <h2>Step 4: 레이스를 선택하고 색상을 골라주세요</h2>
+    <h2>Step 4: Add a touch of lace</h2>
 
     <!-- 레이스 타입 -->
     <div class="grid" id="laceGrid">
@@ -106,7 +106,7 @@
 
   <!-- Step 5 -->
   <div class="step hidden" id="s5">
-    <h2>Step 5: 원하는 단어나 문구를 입력하세요</h2>
+    <h2>Step 5: Type in your custom keyword</h2>
     <div class="row"><input id="keyword" type="text" class="text" placeholder='e.g., "Give me LOVE"' /></div>
     <div class="actions">
       <button class="circle-btn back" onclick="back(4)" aria-label="Back">←<span class="sr-only">Back</span></button>
@@ -116,7 +116,7 @@
 
   <!-- Step 6 -->
   <div class="step hidden" id="s6">
-    <h2>Step 6: 큐빅 색상을 선택해 주세요</h2>
+    <h2>Step 6: Choose your cubic color</h2>
     <div class="grid">
       <div class="option" data-value="Black" onclick="pick('cubicColor', this)">
         <img src="https://via.placeholder.com/150/000000/FFFFFF?text=Black" alt="Black" /><div>Black</div>
@@ -139,7 +139,7 @@
 
   <!-- Step 7 -->
   <div class="step hidden" id="s7">
-    <h2>Step 7: 입력 내용을 확인하고 예약을 완료하세요</h2>
+    <h2>Step 7: Review your choices and confirm</h2>
     <div id="summary"></div>
     <div class="error" id="submitError" style="display:none;"></div>
     <div class="actions">
@@ -150,7 +150,7 @@
 
   <!-- Step 8 -->
   <div class="step hidden" id="s8">
-    <h2>Step 8: 예약이 완료되었습니다, 감사합니다!</h2>
+    <h2>Your reservation is complete – thank you!</h2>
     <p id="doneText"></p>
   </div>
 
