@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css" />
-
   <meta charset="UTF-8" />
-  <title>Custom Keyring Reservation</title>
+  <title>Give me LOVE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <!-- 분리된 CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Custom Keyring Reservation</h1>
-  <p class="subtitle">Fill in your info, choose your options, and get your reservation number.</p>
+  <h1>Give me LOVE</h1>
+  <p class="subtitle">Make a custom filled with love.</p>
 
   <!-- Step 1 -->
   <div class="step" id="s1">
@@ -21,7 +20,10 @@
     <div class="row">
       <label><input id="privacy" type="checkbox" /> I agree to provide my personal information (required)</label>
     </div>
-    <div class="actions"><button onclick="go(2)">Next</button></div>
+    <div class="actions">
+      <span></span>
+      <button class="circle-btn next" onclick="go(2)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    </div>
   </div>
 
   <!-- Step 2 -->
@@ -38,7 +40,10 @@
         <img src="https://via.placeholder.com/150?text=Rectangle" alt="Rectangle" /><div>Rectangle</div>
       </div>
     </div>
-    <div class="actions"><button onclick="back(1)">Back</button><button onclick="go(3)">Next</button></div>
+    <div class="actions">
+      <button class="circle-btn back" onclick="back(1)" aria-label="Back">←<span class="sr-only">Back</span></button>
+      <button class="circle-btn next" onclick="go(3)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    </div>
   </div>
 
   <!-- Step 3 -->
@@ -52,7 +57,10 @@
         <img src="https://via.placeholder.com/150?text=Leopard" alt="Leopard" /><div>Leopard</div>
       </div>
     </div>
-    <div class="actions"><button onclick="back(2)">Back</button><button onclick="go(4)">Next</button></div>
+    <div class="actions">
+      <button class="circle-btn back" onclick="back(2)" aria-label="Back">←<span class="sr-only">Back</span></button>
+      <button class="circle-btn next" onclick="go(4)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    </div>
   </div>
 
   <!-- Step 4 -->
@@ -66,14 +74,20 @@
         <img src="https://via.placeholder.com/150?text=Fabric+Lace" alt="Fabric Lace" /><div>Fabric Lace</div>
       </div>
     </div>
-    <div class="actions"><button onclick="back(3)">Back</button><button onclick="go(5)">Next</button></div>
+    <div class="actions">
+      <button class="circle-btn back" onclick="back(3)" aria-label="Back">←<span class="sr-only">Back</span></button>
+      <button class="circle-btn next" onclick="go(5)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    </div>
   </div>
 
   <!-- Step 5 -->
   <div class="step hidden" id="s5">
     <h2>Step 5: Cubic Keyword</h2>
     <div class="row"><input id="keyword" type="text" class="text" placeholder='e.g., "Give me LOVE"' /></div>
-    <div class="actions"><button onclick="back(4)">Back</button><button onclick="go(6)">Next</button></div>
+    <div class="actions">
+      <button class="circle-btn back" onclick="back(4)" aria-label="Back">←<span class="sr-only">Back</span></button>
+      <button class="circle-btn next" onclick="go(6)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    </div>
   </div>
 
   <!-- Step 6 -->
@@ -93,7 +107,10 @@
         <img src="https://via.placeholder.com/150/87CEEB/000000?text=Sky+Blue" alt="Sky Blue" /><div>Sky Blue</div>
       </div>
     </div>
-    <div class="actions"><button onclick="back(5)">Back</button><button onclick="go(7)">Next</button></div>
+    <div class="actions">
+      <button class="circle-btn back" onclick="back(5)" aria-label="Back">←<span class="sr-only">Back</span></button>
+      <button class="circle-btn next" onclick="go(7)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    </div>
   </div>
 
   <!-- Step 7 -->
@@ -101,9 +118,9 @@
     <h2>Step 7: Review & Submit</h2>
     <div id="summary"></div>
     <div class="error" id="submitError" style="display:none;"></div>
-    <div class="actions" style="margin-top:12px;">
-      <button onclick="back(6)">Back</button>
-      <button id="submitBtn" onclick="submitForm()">Confirm & Submit</button>
+    <div class="actions">
+      <button class="circle-btn back" onclick="back(6)" aria-label="Back">←<span class="sr-only">Back</span></button>
+      <button class="circle-btn next" id="submitBtn" onclick="submitForm()" aria-label="Submit">✓<span class="sr-only">Submit</span></button>
     </div>
   </div>
 
@@ -155,11 +172,11 @@
       document.getElementById('submitError').textContent='';
     }
 
-    // 🔑 FormData(헤더 없음)로 보내 CORS 문제 없이 동작
+    // 🔑 FormData로 POST
     async function submitForm(){
       const btn=document.getElementById('submitBtn');
       const errBox=document.getElementById('submitError');
-      btn.disabled=true; btn.textContent='Submitting...';
+      btn.disabled=true; btn.textContent='…';
       errBox.style.display='none'; errBox.textContent='';
 
       try{
@@ -191,7 +208,7 @@
       }catch(err){
         errBox.textContent = 'Submit failed: ' + err.message;
         errBox.style.display='block';
-        btn.disabled=false; btn.textContent='Confirm & Submit';
+        btn.disabled=false; btn.textContent='✓';
       }
     }
 
