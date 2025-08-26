@@ -202,6 +202,7 @@
         if(!state.shape || !state.fabric || !state.fabricColor || !state.lace || !state.laceColor || !state.keyword || !state.cubicColor){
           alert('Please complete all selections.');
           return;
+        }
         renderReceipt({
           mountId:'receiptPreview',
           name: state.name,
@@ -215,7 +216,7 @@
           keyword: state.keyword,
           cubicColor: state.cubicColor
         });
-        }
+        
         renderSummary();
       }
       // Step3/4에서의 추가 제어는 아래 래핑 go에서 처리
@@ -457,20 +458,6 @@
 
         document.getElementById('doneText').textContent =
           `${state.name}, your reservation number is: ${data.reservationNumber}`;
-
-        renderReceipt({
-          mountId:'receiptFinal',
-          name: state.name,
-          reservationNumber: rn,
-          date: new Date(),
-          shape: state.shape,
-          fabric: state.fabricEn||state.fabric,
-          fabricColor: state.fabricColor,
-          lace: state.lace,
-          laceColor: state.laceColor,
-          keyword: state.keyword,
-          cubicColor: state.cubicColor
-        });
         
         show(8);
 
