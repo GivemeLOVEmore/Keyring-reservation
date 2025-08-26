@@ -288,8 +288,8 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
 #s6 #cubicGrid .option img{
   width: 100%;
   height: auto;         /* 비율 유지 */
-  max-height: 140px;    /* 너무 커지는 것 방지 (원하면 값 조정) */
-  object-fit: cover;
+  max-height: none;    /* 너무 커지는 것 방지 (원하면 값 조정) */
+  object-fit: cantain;
 }
 /* 선택 카드 + 칩을 한 줄 2열로 배치 */
 .chips-row{
@@ -316,6 +316,39 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
 /* 칩 크기(원형) — 필요하면 수치만 바꿔 */
 .color-chip{ width: 40px; height: 40px; border-radius: 50%; }
 .color-chip img{ width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+/* 선택 카드+칩 래퍼는 항상 그 줄 전체를 차지 */
+#fabricGrid .chips-row,
+#laceGrid .chips-row{
+  grid-column: 1 / -1;  /* ← 그리드 전체 폭 차지 */
+}
+
+/* 래퍼 내부 2열: 왼쪽 카드 | 오른쪽 패널 */
+.chips-row{
+  display: grid;
+  grid-template-columns: minmax(0,1fr) min(40%, 260px); /* 데스크톱에서 패널은 최대 260px */
+  gap: 12px;
+  align-items: start;
+}
+
+/* 모바일에서도 '오른쪽' 유지하되 패널 폭만 줄임 */
+@media (max-width: 480px){
+  .chips-row{
+    grid-template-columns: 1fr 160px; /* 모바일 패널 너비 */
+  }
+}
+
+/* 패널 내부 정렬/랩핑 보장 */
+.chips-row .color-chips{
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+  justify-content: flex-start;
+}
+
+/* (옵션) 폼 박스 밖으로 시각적으로 나가는 느낌 방지 */
+.step{ overflow: visible; }   /* 칩 그림자/테두리 잘리지 않게 */
+
 
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
 /* .rc-item .r.wrap { white-space: normal; word-break: keep-all; } */
