@@ -416,7 +416,7 @@
         <div><b>Shape:</b> ${state.shape}</div>
         <div><b>Fabric:</b> ${state.fabricEn || state.fabric} — ${state.fabricColor}</div>
         <div><b>Lace:</b> ${state.lace} — ${state.laceColor}</div>
-        <div><b>Cubic Keyword:</b> "${state.keyword}"</div>
+        <div><b>Cubic Keyword:</b> "${escapeHTML(state.keyword)}"</div>
         <div><b>Cubic Color:</b> ${state.cubicColor}</div>
       `;
       const err = document.getElementById('submitError');
@@ -456,9 +456,24 @@
           throw new Error(reason);
         }
 
+        const rn = data.reservationNumber || 'PREPARING';
+
         document.getElementById('doneText').textContent =
-          `${state.name}, your reservation number is: ${data.reservationNumber}`;
-        
+        `${state.name}, your reservation number is: ${rn}`;
+
+        renderReceipt({
+            mountId:'receiptFinal',
+            name: state.name,
+            reservationNumber: rn,         // ← 예약번호 반영
+            date: new Date(),
+            shape: state.shape,
+            fabric: state.fabricEn || state.fabric,
+            fabricColor: state.fabricColor,
+            lace: state.lace,
+            laceColor: state.laceColor,
+            keyword: state.keyword,
+            cubicColor: state.cubicColor
+        });
         show(8);
 
       }catch(err){
