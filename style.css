@@ -2,7 +2,7 @@
 :root { --bg:#FEF7FC; --fg:#D63384; --card:#fff0f5; }
 *{box-sizing:border-box}
 body{ background:var(--bg); color:#D63384; font-family:system-ui,-apple-system,Arial,sans-serif; margin:0; padding:24px; text-align:center; }
-h1{ margin:0 0 8px; color:#F08FB5;}
+h1{ margin:0 0 8px; color:#D63384;}
 .subtitle{ margin:0 0 24px; opacity:.85; font-style:italic;}
 
 /* 카드/스텝 상자: 점선 → 실선 */
