@@ -289,6 +289,30 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   max-height: 140px;    /* 너무 커지는 것 방지 (원하면 값 조정) */
   object-fit: cover;
 }
+/* 선택 카드 + 칩을 한 줄 2열로 배치 */
+.chips-row{
+  display: grid;
+  grid-template-columns: 1fr 200px; /* 왼쪽 카드, 오른쪽 칩 패널 */
+  gap: 12px;
+  align-items: start;
+}
+
+/* 모바일에서도 오른쪽 유지 (칩 폭만 살짝 줄임) */
+@media (max-width: 480px){
+  .chips-row{ grid-template-columns: 1fr 160px; }
+}
+
+/* 칩 패널 내부 정리 */
+.chips-row .color-chips{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+}
+
+/* 칩 크기(원형) — 필요하면 수치만 바꿔 */
+.color-chip{ width: 40px; height: 40px; border-radius: 50%; }
+.color-chip img{ width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
 /* .rc-item .r.wrap { white-space: normal; word-break: keep-all; } */
