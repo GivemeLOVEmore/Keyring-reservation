@@ -258,24 +258,6 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   .chips-row{ grid-template-columns: 1fr 160px; }
 }
 
-
-  /* 로고/문구, 폰트 조금 더 축소 */
-  .rc-logo--big{ height: 72px; }
-  .rc-thanks{ font-size: clamp(14px, 4.2vw, 16px); }
-
-  .rc-info-row,
-  .rc-item{ font-size: 13px; }
-
-  .rc-serial{ font-size: 14px; }
-
-  /* 값 영역 폭 제한 강화: 말줄임을 더 빨리 적용 */
-  .rc-info-row .r,
-  .rc-item .r{ max-width: 58vw; }
-
-  /* 상단 제목/부제 과도한 줄바꿈 방지 */
-  h1{ font-size: clamp(20px, 6vw, 28px); }
-  .subtitle{ font-size: clamp(12px, 3.8vw, 15px); }
-}
 /* Lace 값을 2줄로, 오른쪽 정렬 */
 .rc-item .val-multi{
   display: flex;
