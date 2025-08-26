@@ -257,11 +257,10 @@
 
       renderFabricChips(key);
 
+      // ✅ 오른쪽에 붙이기
+      resetChipsWrap('fabricGrid','fabricColors');
       const panel = document.getElementById('fabricColors');
-      if (panel) {
-        el.insertAdjacentElement('afterend', panel);  // 바로 아래로 이동
-        panel.classList.remove('hidden');
-      }
+      attachChipsRight(el, panel);
       
       updateFabricSelectionNote();
       refreshStep3Controls();
@@ -355,11 +354,9 @@
 
       renderLaceChips(key);
       
+      resetChipsWrap('laceGrid','laceColors');
       const panel = document.getElementById('laceColors');
-      if (panel) {
-        el.insertAdjacentElement('afterend', panel);  // 바로 아래로 이동
-        panel.classList.remove('hidden');
-      }
+      attachChipsRight(el, panel);
       
       updateLaceSelectionNote();
       refreshStep4Controls();
@@ -572,6 +569,32 @@
         </div>
       </div>`;
   }
+    // 기존 래퍼/패널 정리
+function resetChipsWrap(gridId, panelId){
+  const grid = document.getElementById(gridId);
+  const panel = document.getElementById(panelId);
+  // chips-row 래퍼를 평탄화
+  grid.querySelectorAll('.chips-row').forEach(w => {
+    const opt = w.querySelector('.option');
+    if (opt) grid.insertBefore(opt, w);
+    w.remove();
+  });
+  // 패널 숨김 (다음 attach에서 다시 보임)
+  if (panel) panel.classList.add('hidden');
+}
+
+// 선택 카드 오른쪽에 패널 부착
+function attachChipsRight(el, panel){
+  if (!el || !panel) return;
+  // 래퍼 만들고 카드/패널 넣기
+  const wrap = document.createElement('div');
+  wrap.className = 'chips-row';
+  el.parentNode.insertBefore(wrap, el);
+  wrap.appendChild(el);
+  wrap.appendChild(panel);
+  panel.classList.remove('hidden');
+}
+
     // 초기화
     show(1);
   </script>
