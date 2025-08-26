@@ -144,6 +144,7 @@
   <div class="step hidden" id="s7">
     <h2>Step 7: Review your choices and confirm</h2>
     <div id="summary"></div>
+    <div id="receiptPreview" class="receipt"></div>
     <div class="error" id="submitError" style="display:none;"></div>
     <div class="actions">
       <button class="circle-btn back" onclick="back(6)" aria-label="Back">←<span class="sr-only">Back</span></button>
@@ -155,6 +156,7 @@
   <div class="step hidden" id="s8">
     <h2>Your reservation is complete – thank you!</h2>
     <p id="doneText"></p>
+    <div id="receiptFinal" class="receipt"></div>
   </div>
 
   <script>
@@ -200,6 +202,19 @@
         if(!state.shape || !state.fabric || !state.fabricColor || !state.lace || !state.laceColor || !state.keyword || !state.cubicColor){
           alert('Please complete all selections.');
           return;
+        renderReceipt({
+          mountId:'receiptPreview',
+          name: state.name,
+          reservationNumber: null,
+          date: new Date(),
+          shape: state.shape,
+          fabric: state.fabricEn||state.fabric,
+          fabricColor: state.fabricColor,
+          lace: state.lace,
+          laceColor: state.laceColor,
+          keyword: state.keyword,
+          cubicColor: state.cubicColor
+        });
         }
         renderSummary();
       }
@@ -442,6 +457,21 @@
 
         document.getElementById('doneText').textContent =
           `${state.name}, your reservation number is: ${data.reservationNumber}`;
+
+        renderReceipt({
+          mountId:'receiptFinal',
+          name: state.name,
+          reservationNumber: rn,
+          date: new Date(),
+          shape: state.shape,
+          fabric: state.fabricEn||state.fabric,
+          fabricColor: state.fabricColor,
+          lace: state.lace,
+          laceColor: state.laceColor,
+          keyword: state.keyword,
+          cubicColor: state.cubicColor
+        });
+        
         show(8);
 
       }catch(err){
@@ -463,7 +493,65 @@
         `;
       }
     });
+    // HTML 이스케이프 함수
+  function escapeHTML(str){
+    return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+  }
+  // 날짜 포맷
+  function formatDateK(dt){
+    const d = new Date(dt);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const dd = String(d.getDate()).padStart(2,'0');
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const ddd = days[d.getDay()];
+    return `${yyyy}.${mm}.${dd} (${ddd})`;
+  }
 
+  // 영수증 렌더링
+  function renderReceipt({mountId, name, reservationNumber, date, shape, fabric, fabricColor, lace, laceColor, keyword, cubicColor}){
+    const mount = document.getElementById(mountId);
+    if(!mount) return;
+    const rn = reservationNumber || 'PREPARING';
+    const dateStr = formatDateK(date);
+    const rows = [
+      ['Shape', escapeHTML(shape||'-')],
+      ['Fabric', `${escapeHTML(fabric||'-')}${fabricColor ? ' — '+escapeHTML(fabricColor):''}`],
+      ['Lace', `${escapeHTML(lace||'-')}${laceColor ? ' — '+escapeHTML(laceColor):''}`],
+      ['Cubic keyword', `"${escapeHTML(keyword||'-')}"`],
+      ['Cubic color', escapeHTML(cubicColor||'-')]
+    ];
+    mount.innerHTML = `
+      <div class="receipt-card">
+        <div class="rc-header">
+          <div class="rc-logo ph">LOGO</div>
+          <div class="rc-brand">
+            <div class="rc-title">Give me LOVE</div>
+            <div class="rc-thanks">Have a day full of love.</div>
+          </div>
+        </div>
+        <div class="rc-sep"></div>
+        <div class="rc-info">
+          <div class="rc-info-row"><span class="l">Name</span><span class="r">${escapeHTML(name||'-')}</span></div>
+          <div class="rc-info-row"><span class="l">Date</span><span class="r">${dateStr}</span></div>
+          <div class="rc-info-row"><span class="l">Reservation No.</span><span class="r monospace">${escapeHTML(rn)}</span></div>
+        </div>
+        <div class="rc-sep dotted"></div>
+        <div class="rc-items">
+          ${rows.map(([l,v])=>`<div class="rc-item"><span class="l">${l}</span><span class="r monospace">${v}</span></div>`).join('')}
+        </div>
+        <div class="rc-sep"></div>
+        <div class="rc-barcode">
+          <img src="https://via.placeholder.com/320x80?text=BARCODE" alt="Barcode"/>
+          <div class="rc-serial monospace">${escapeHTML(rn)}</div>
+        </div>
+        <div class="rc-sep dotted"></div>
+        <div class="rc-footer">
+          <div class="rc-note">Thank you for your reservation.</div>
+          <div class="rc-sns">Follow us: @givemelove_official · instagram.com/givemelove_official</div>
+        </div>
+      </div>`;
+  }
     // 초기화
     show(1);
   </script>
