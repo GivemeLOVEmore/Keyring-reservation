@@ -2,7 +2,7 @@
 :root { --bg:#FEF7FC; --fg:#D63384; --card:#fff0f5; }
 *{box-sizing:border-box}
 body{ background:var(--bg); color:#D63384; font-family:system-ui,-apple-system,Arial,sans-serif; margin:0; padding:24px; text-align:center; }
-h1{ margin:0 0 8px; color:#F08FB5; }
+h1{ margin:0 0 8px; color:#F08FB5; font-style:italic;}
 .subtitle{ margin:0 0 24px; opacity:.85; }
 
 /* 카드/스텝 상자: 점선 → 실선 */
@@ -18,8 +18,8 @@ h1{ margin:0 0 8px; color:#F08FB5; }
 /* Step 숫자 전용 스타일 */
 .step-num {
   display:block;
-  font-family: 'Moo Lah Lah', cursive;  /* ← 구글 폰트 이름 */
-  font-size: 40px;
+  font-family: 'Dangrek', cursive;  /* ← 구글 폰트 이름 */
+  font-size: 35px;
   font-weight: 400; /* 이 폰트는 보통 굵기만 지원 */
   color: #D63384;
   margin-bottom: 6px;
@@ -28,7 +28,8 @@ h1{ margin:0 0 8px; color:#F08FB5; }
 /* Step 설명 */
 .step-desc {
   display:block;
-  font-size: 18px;
+  font-family: 'Dangrek', cursive;
+  font-size: 20px;
   font-weight: 400;
   color: #F08FB5;                /* 본문 글꼴 색상 유지 */
 }
