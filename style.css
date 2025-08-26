@@ -136,19 +136,30 @@ button{ font-family:inherit; }
   margin:0 auto;
   padding:16px 16px 18px;
   border:2px solid #F4C7D7;
-  border-radius:12px;
+  border-radius: 0 !important;
   box-shadow:0 4px 16px rgba(0,0,0,.06);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
   color:#2D2A2E;
 }
 .rc-header{ display:flex; gap:12px; align-items:center; }
-.rc-logo{ width:72px; height:48px; object-fit:contain; }
-.rc-logo.ph{ background:#eee; color:#999; display:flex; align-items:center; justify-content:center; border:1px solid #ddd; border-radius:6px; font-size:12px; font-weight:600; }
-.rc-brand{ line-height:1.15; }
+/* ── 헤더 중앙 정렬 + 로고 크게 ─────────────────── */
+.rc-header--center{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;                /* 로고와 문구 간 간격 */
+}
+.rc-logo--big{
+  width: auto;
+  height: 96px;            /* 필요하면 120px로 더 키워도 됨 */
+  object-fit: contain;
+  margin: 4px 0 6px;
+}
 .rc-title{ font-weight:800; letter-spacing:.3px; }
 .rc-thanks{ font-style:italic; color:#D63384; margin-top:2px; }
-.rc-sep{ border-top:2px solid #F4C7D7; margin:12px 0; }
-.rc-sep.dotted{ border-top:2px dashed #F4C7D7; }
+.rc-sep{ border-top:2px solid #F4C7D7; margin:18px 0; }
+.rc-sep.dotted{ border-top:2px dashed #F4C7D7; margin: 18px 0;}
 .rc-info{ display:grid; gap:6px; }
 .rc-info-row{ display:flex; justify-content:space-between; font-size:14px; }
 .rc-items{ display:grid; gap:6px; margin-top:2px; }
