@@ -514,7 +514,9 @@
   function renderReceipt({mountId, name, reservationNumber, date, shape, fabric, fabricColor, lace, laceColor, keyword, cubicColor}){
     const mount = document.getElementById(mountId);
     if(!mount) return;
+    const hasLogo = !!LOGO_URL;
     const rn = reservationNumber || 'PREPARING';
+    const barcodeUrl = 'https://via.placeholder.com/320x80?text=BARCODE';
     const dateStr = formatDateK(date);
     const rows = [
       ['Shape', escapeHTML(shape||'-')],
