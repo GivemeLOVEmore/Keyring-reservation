@@ -457,7 +457,7 @@
         const rn = data.reservationNumber || 'PREPARING';
 
         document.getElementById('doneText').textContent =
-        `${state.name}, your reservation number is: ${rn}`;
+        `${state.name}, your reservation number is ${rn}`;
 
         renderReceipt({
             mountId:'receiptFinal',
