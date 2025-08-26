@@ -1,5 +1,5 @@
 /* 전역 */
-:root { --bg:#FEF7FC; --fg:#F08FB5; --card:#fff0f5; }
+:root { --bg:#FEF7FC; --fg:#D63384; --card:#fff0f5; }
 *{box-sizing:border-box}
 body{ background:var(--bg); color:#D63384; font-family:system-ui,-apple-system,Arial,sans-serif; margin:0; padding:24px; text-align:center; }
 h1{ margin:0 0 8px; color:var(--fg); }
@@ -8,7 +8,7 @@ h1{ margin:0 0 8px; color:var(--fg); }
 /* 카드/스텝 상자: 점선 → 실선 */
 .step{
   background:var(--card);
-  border:2px solid var(--fg);   /* ← dashed 에서 solid 로 변경 */
+  border:2px solid #F4C7D7;   /* ← dashed 에서 solid 로 변경 */
   border-radius:16px;
   padding:16px;
   margin:0 auto 16px;
@@ -21,7 +21,7 @@ h1{ margin:0 0 8px; color:var(--fg); }
   font-family: 'Moo Lah Lah', cursive;  /* ← 구글 폰트 이름 */
   font-size: 40px;
   font-weight: 400; /* 이 폰트는 보통 굵기만 지원 */
-  color: #F08FB5;
+  color: #D63384;
   margin-bottom: 6px;
 }
 
