@@ -43,7 +43,7 @@ h1{ margin:0 0 8px; color:#D63384;}
 }
 
 .color-chip{
-  width:36px; height:36px;           /* ← 요청: 작은 원형 (추천 36px) */
+  width:40px; height:40px;           /* ← 요청: 작은 원형 (추천 36px) */
   border-radius:9999px;               /* 완전 원형 */
   border:2px solid #e8d0da;           /* 테두리 */
   background:#fff;                    /* 칩 배경 */
@@ -55,7 +55,7 @@ h1{ margin:0 0 8px; color:#D63384;}
   padding:0;
 }
 .color-chip img{
-  width:26px; height:26px;            /* 안의 이미지(원단 색 이미지) */
+  width:34px; height:34px;            /* 안의 이미지(원단 색 이미지) */
   border-radius:9999px;
   object-fit:cover;
 }
@@ -66,6 +66,7 @@ h1{ margin:0 0 8px; color:#D63384;}
 .color-chip.selected{
   border-color: var(--fg);            /* 선택 시 포인트 색(#F08FB5) */
   box-shadow:0 0 0 3px rgba(240,143,181,.18);
+  transform: scale(1.1); /* 살짝 커짐 효과 */
 }
 
 .color-chip.disabled,
