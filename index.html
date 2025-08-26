@@ -519,7 +519,13 @@
     const rows = [
       ['Shape', escapeHTML(shape||'-')],
       ['Fabric', `${escapeHTML(fabric||'-')}${fabricColor ? ' — '+escapeHTML(fabricColor):''}`],
-      ['Lace', `${escapeHTML(lace||'-')}${laceColor ? ' — '+escapeHTML(laceColor):''}`],
+      // ✅ Lace만 2줄(오른쪽 정렬)로 출력
+      ['Lace', `
+        <div class="val-multi">
+          <div class="top">${escapeHTML(lace || '-')}</div>
+          <div class="bottom">${laceColor ? escapeHTML(laceColor) : ''}</div>
+        </div>
+      `],
       ['Cubic keyword', `"${escapeHTML(keyword||'-')}"`],
       ['Cubic color', escapeHTML(cubicColor||'-')]
     ];
