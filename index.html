@@ -117,28 +117,27 @@
     </div>
   </div>
 
-  <!-- Step 6 -->
   <div class="step hidden" id="s6">
-    <h2>Step 6: Choose your cubic color</h2>
-    <div class="grid" id="cubicGrid">
-      <div class="option" data-value="Clear" onclick="pick('cubicColor', this)">
-        <img src="images/cubic-clear.png?v=2" alt="Clear" /><div>Black</div>
-      </div>
-      <div class="option" data-value="Black" onclick="pick('cubicColor', this)">
-        <img src="images/cubic-black.png?v=2" alt="Black" /><div>Clear</div>
-      </div>
-      <div class="option" data-value="Pink" onclick="pick('cubicColor', this)">
-        <img src="images/cubic-pink.png?v=2" alt="Pink" /><div>Pink</div>
-      </div>
-      <div class="option" data-value="Blue" onclick="pick('cubicColor', this)">
-        <img src="images/cubic-blue.png?v=2" alt="Blue" /><div>Sky Blue</div>
-      </div>
+  <h2>Step 6: Choose your cubic color</h2>
+  <div class="grid" id="cubicGrid">
+    <div class="option" data-value="Black" onclick="pick('cubicColor', this)">
+      <img src="images/cubic-black.png?v=2" alt="Black" /><div>Black</div>
     </div>
-    <div class="actions">
-      <button class="circle-btn back" onclick="back(5)" aria-label="Back">←<span class="sr-only">Back</span></button>
-      <button class="circle-btn next" onclick="go(7)" aria-label="Next">→<span class="sr-only">Next</span></button>
+    <div class="option" data-value="Clear" onclick="pick('cubicColor', this)">
+      <img src="images/cubic-clear.png?v=2" alt="Clear" /><div>Clear</div>
+    </div>
+    <div class="option" data-value="Pink" onclick="pick('cubicColor', this)">
+      <img src="images/cubic-pink.png?v=2" alt="Pink" /><div>Pink</div>
+    </div>
+    <div class="option" data-value="Sky Blue" onclick="pick('cubicColor', this)">
+      <img src="images/cubic-blue.png?v=2" alt="Sky Blue" /><div>Sky Blue</div>
     </div>
   </div>
+  <div class="actions">
+    <button class="circle-btn back" onclick="back(5)" aria-label="Back">←<span class="sr-only">Back</span></button>
+    <button class="circle-btn next" onclick="go(7)" aria-label="Next">→<span class="sr-only">Next</span></button>
+  </div>
+</div>
 
   <!-- Step 7 -->
   <div class="step hidden" id="s7">
@@ -245,26 +244,30 @@
       }
     };
 
-    function selectFabric(key, el){
-      const grid = document.getElementById('fabricGrid');
-      [...grid.querySelectorAll('.option')].forEach(o=>o.classList.remove('selected'));
-      el.classList.add('selected');
+ function selectFabric(key, el){
+  // ① 먼저 정리
+  resetChipsWrap('fabricGrid','fabricColors');
 
-      state.fabric = key;
-      state.fabricEn = FABRIC_CONFIG[key]?.labelEn || key;
-      state.fabricColor = '';
-      state.fabricColorId = '';
+  // ② 상태/선택 표시
+  const grid = document.getElementById('fabricGrid');
+  [...grid.querySelectorAll('.option')].forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
 
-      renderFabricChips(key);
+  state.fabric    = key;
+  state.fabricEn  = FABRIC_CONFIG[key]?.labelEn || key;
+  state.fabricColor   = '';
+  state.fabricColorId = '';
 
-      // ✅ 오른쪽에 붙이기
-      resetChipsWrap('fabricGrid','fabricColors');
-      const panel = document.getElementById('fabricColors');
-      attachChipsRight(el, panel);
-      
-      updateFabricSelectionNote();
-      refreshStep3Controls();
-    }
+  // ③ 칩 HTML 렌더만 (표시/숨김 X)
+  renderFabricChips(key);
+
+  // ④ 선택 카드 오른쪽으로 패널 부착 + 표시
+  const panel = document.getElementById('fabricColors');
+  attachChipsRight(el, panel);
+
+  updateFabricSelectionNote();
+  refreshStep3Controls();
+  }
 
     function renderFabricChips(key){
       const panel = document.getElementById('fabricColors');
@@ -283,7 +286,6 @@
             <img src="${c.imageUrl}" alt="${c.labelEn}" />
           </button>`;
       }).join('');
-      panel.classList.remove('hidden');
       panel.querySelectorAll('.color-chip').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           if(btn.disabled) return;
@@ -342,25 +344,30 @@
       }
     };
 
-    function selectLace(key, el){
-      const grid = document.getElementById('laceGrid');
-      [...grid.querySelectorAll('.option')].forEach(o=>o.classList.remove('selected'));
-      el.classList.add('selected');
+   function selectLace(key, el){
+  // ① 먼저 정리
+  resetChipsWrap('laceGrid','laceColors');
 
-      state.laceType = key;
-      state.lace     = LACE_CONFIG[key]?.labelEn || key;
-      state.laceColor = '';
-      state.laceColorId = '';
+  // ② 상태/선택 표시
+  const grid = document.getElementById('laceGrid');
+  [...grid.querySelectorAll('.option')].forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
 
-      renderLaceChips(key);
-      
-      resetChipsWrap('laceGrid','laceColors');
-      const panel = document.getElementById('laceColors');
-      attachChipsRight(el, panel);
-      
-      updateLaceSelectionNote();
-      refreshStep4Controls();
-    }
+  state.laceType    = key;
+  state.lace        = LACE_CONFIG[key]?.labelEn || key;
+  state.laceColor   = '';
+  state.laceColorId = '';
+
+  // ③ 칩 HTML 렌더만 (표시/숨김 X)
+  renderLaceChips(key);
+
+  // ④ 오른쪽 부착 + 표시
+  const panel = document.getElementById('laceColors');
+  attachChipsRight(el, panel);
+
+  updateLaceSelectionNote();
+  refreshStep4Controls();
+}
 
     function renderLaceChips(key){
       const panel = document.getElementById('laceColors');
@@ -379,7 +386,6 @@
             <img src="${c.imageUrl}" alt="${c.labelEn}" />
           </button>`;
       }).join('');
-      panel.classList.remove('hidden');
       panel.querySelectorAll('.color-chip').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           if(btn.disabled) return;
@@ -569,30 +575,47 @@
         </div>
       </div>`;
   }
-    // 기존 래퍼/패널 정리
+// 1) 기존 chips-row 래퍼를 해제하고, 패널을 그리드 뒤로 돌려놓고 숨김
 function resetChipsWrap(gridId, panelId){
-  const grid = document.getElementById(gridId);
+  const grid  = document.getElementById(gridId);
   const panel = document.getElementById(panelId);
-  // chips-row 래퍼를 평탄화
-  grid.querySelectorAll('.chips-row').forEach(w => {
+  if(!grid || !panel) return;
+
+  // chips-row 해제 (카드 되돌리기)
+  grid.querySelectorAll('.chips-row').forEach(w=>{
     const opt = w.querySelector('.option');
     if (opt) grid.insertBefore(opt, w);
     w.remove();
   });
-  // 패널 숨김 (다음 attach에서 다시 보임)
-  if (panel) panel.classList.add('hidden');
+
+  // 패널을 그리드 바로 다음으로 이동
+  if (panel.parentNode !== grid.parentNode || panel.previousElementSibling !== grid){
+    grid.parentNode.insertBefore(panel, grid.nextSibling);
+  }
+
+  // 확실히 숨김
+  panel.classList.add('hidden');
+  panel.style.removeProperty('display');
 }
 
-// 선택 카드 오른쪽에 패널 부착
+// 2) 선택 카드 오른쪽으로 패널을 부착하고 "표시"만 여기서 담당
 function attachChipsRight(el, panel){
-  if (!el || !panel) return;
-  // 래퍼 만들고 카드/패널 넣기
-  const wrap = document.createElement('div');
-  wrap.className = 'chips-row';
-  el.parentNode.insertBefore(wrap, el);
-  wrap.appendChild(el);
-  wrap.appendChild(panel);
+  if(!el || !panel) return;
+
+  // 이미 chips-row라면 패널만 옮기기, 아니면 래퍼 새로 만들기
+  if (el.parentElement && el.parentElement.classList.contains('chips-row')) {
+    el.parentElement.appendChild(panel);
+  } else {
+    const wrap = document.createElement('div');
+    wrap.className = 'chips-row';
+    el.parentNode.insertBefore(wrap, el);
+    wrap.appendChild(el);
+    wrap.appendChild(panel);
+  }
+
+  // 반드시 보이도록 (hidden 제거 + display 인라인 제거)
   panel.classList.remove('hidden');
+  panel.style.removeProperty('display');
 }
 
     // 초기화
