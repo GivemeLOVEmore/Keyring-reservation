@@ -257,6 +257,13 @@
       state.fabricColorId = '';
 
       renderFabricChips(key);
+
+      const panel = document.getElementById('fabricColors');
+      if (panel) {
+        el.insertAdjacentElement('afterend', panel);  // 바로 아래로 이동
+        panel.classList.remove('hidden');
+      }
+      
       updateFabricSelectionNote();
       refreshStep3Controls();
     }
@@ -348,6 +355,13 @@
       state.laceColorId = '';
 
       renderLaceChips(key);
+      
+      const panel = document.getElementById('laceColors');
+      if (panel) {
+        el.insertAdjacentElement('afterend', panel);  // 바로 아래로 이동
+        panel.classList.remove('hidden');
+      }
+      
       updateLaceSelectionNote();
       refreshStep4Controls();
     }
