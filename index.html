@@ -144,7 +144,6 @@
   <div class="step hidden" id="s7">
     <h2>Step 7: Review your choices and confirm</h2>
     <div id="summary"></div>
-    <div id="receiptPreview" class="receipt"></div>
     <div class="error" id="submitError" style="display:none;"></div>
     <div class="actions">
       <button class="circle-btn back" onclick="back(6)" aria-label="Back">←<span class="sr-only">Back</span></button>
@@ -525,13 +524,11 @@
     ];
     mount.innerHTML = `
       <div class="receipt-card">
-        <div class="rc-header">
-          <div class="rc-logo ph">LOGO</div>
-          <div class="rc-brand">
-            <div class="rc-title">Give me LOVE</div>
-            <div class="rc-thanks">Have a day full of love.</div>
-          </div>
-        </div>
+        <div class="rc-header rc-header--center">
+          ${hasLogo ? `<img class="rc-logo rc-logo--big" src="${LOGO_URL}" alt="Brand logo" />`
+          : `<div class="rc-logo rc-logo--big ph">LOGO</div>`}
+        <div class="rc-thanks">${THANKS_HEADER}</div>
+      </div>
         <div class="rc-sep"></div>
         <div class="rc-info">
           <div class="rc-info-row"><span class="l">Name</span><span class="r">${escapeHTML(name||'-')}</span></div>
