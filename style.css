@@ -472,6 +472,7 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   font-weight: 400;  /* 볼드 없음 */
   line-height: 1.4;
   text-align: center;
+  color:#FEF7FC;
 }
 
 /* (선택) 혹시 래퍼에 원형 패턴이 적용돼 보이면, 래퍼는 비활성화 */
