@@ -476,6 +476,33 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   color:#F08FB5;
 }
 
+#s8 #receiptArea{ position: relative; }
+
+#s8 .rc-overlay{
+  position:absolute; inset:0;
+  display:none;                   /* .show 시 표시 */
+  align-items:center; justify-content:center;
+  background: rgba(254,247,252,0.8); /* var(--bg) 톤 */
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+#s8 .rc-overlay.show{ display:flex; }
+
+#s8 .rc-spinner{
+  width:28px; height:28px;
+  border-radius:50%;
+  border:3px solid #F4C7D7;
+  border-top-color: transparent;
+  animation: rc-spin 0.9s linear infinite;
+  margin-right:10px;
+}
+@keyframes rc-spin{ to{ transform: rotate(360deg); } }
+
+#s8 .rc-msg{
+  font-size:14px;
+  color:#2D2A2E;
+}
+
 /* (선택) 혹시 래퍼에 원형 패턴이 적용돼 보이면, 래퍼는 비활성화 */
 #s8 .receipt { border: 0; background: transparent; }
 #s8 .receipt::before, #s8 .receipt::after { content: none; }
