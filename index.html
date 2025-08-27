@@ -442,18 +442,22 @@
 
     /* ===== Step 7 요약 ===== */
 function renderSummary(){
-  // 기존 escapeHTML/formatDateK, CONFIG들 그대로 사용
+  // 기존 escapeHTML / formatDateK / state / FABRIC_CONFIG / LACE_CONFIG 그대로 사용
+
   const SHAPE_IMG = {
     'Heart':'images/shape-heart.png?v=2',
     'Round':'images/shape-round.png?v=2',
     'Rectangle':'images/shape-rectangle.png?v=2'
   };
-  const CUBIC_IMG = {
-    'Clear':'images/cubic-clear.png?v=2',
-    'Black':'images/cubic-black.png?v=2',
-    'Pink':'images/cubic-pink.png?v=2',
-    'Sky Blue':'images/cubic-blue.png?v=2'
+
+  /* Step7 전용 요약 이미지 매핑 (-summ) */
+  const CUBIC_SUMM_IMG = {
+    'Clear':'images/cubic-clear-summ.png?v=2',
+    'Black':'images/cubic-black-summ.png?v=2',
+    'Pink':'images/cubic-pink-summ.png?v=2',
+    'Sky Blue':'images/cubic-blue-summ.png?v=2'
   };
+
   const getFabricThumb = () => {
     if(!state.fabric || !state.fabricColorId) return '';
     const cfg = FABRIC_CONFIG[state.fabric];
@@ -467,41 +471,51 @@ function renderSummary(){
     return c?.imageUrl || '';
   };
 
-  // === 2×3 순서 ===
+  // === 2×3 구성 ===
   // 1줄(위): Shape, Keyword  → 각 span-3
   // 2줄(아래): Fabric, Lace, Cubic Color → 각 span-2
   const cards = [
     {
+      key:'shape',
       label:'Shape',
       img: SHAPE_IMG[state.shape] || '',
       value: escapeHTML(state.shape || '-'),
-      span: 'span-3'
+      span: 'span-3',
+      keyword: false
     },
     {
+      key:'keyword',
       label:'Cubic Keyword',
-      img: '', // 키워드는 썸네일 없음
-      value: '"' + escapeHTML(state.keyword || '-') + '"',
-      span: 'span-3'
+      img: null,  /* 키워드는 이미지 없이 텍스트만 */
+      value: escapeHTML(state.keyword || '-'), /* 따옴표 제거: 입력 텍스트만 */
+      span: 'span-3',
+      keyword: true
     },
     {
+      key:'fabric',
       label:'Fabric',
       img: getFabricThumb(),
       value: escapeHTML(state.fabricEn || state.fabric || '-') +
              (state.fabricColor ? ' — ' + escapeHTML(state.fabricColor) : ''),
-      span: 'span-2'
+      span: 'span-2',
+      keyword: false
     },
     {
+      key:'lace',
       label:'Lace',
       img: getLaceThumb(),
       value: escapeHTML(state.lace || '-') +
              (state.laceColor ? ' / ' + escapeHTML(state.laceColor) : ''),
-      span: 'span-2'
+      span: 'span-2',
+      keyword: false
     },
     {
+      key:'cubicColor',
       label:'Cubic Color',
-      img: CUBIC_IMG[state.cubicColor] || '',
+      img: CUBIC_SUMM_IMG[state.cubicColor] || '',  /* -summ 이미지 사용 */
       value: escapeHTML(state.cubicColor || '-'),
-      span: 'span-2'
+      span: 'span-2',
+      keyword: false
     }
   ];
 
@@ -509,6 +523,18 @@ function renderSummary(){
   if(!grid) return;
 
   grid.innerHTML = cards.map(c=>{
+    // 키워드 카드: 썸네일 자리에 텍스트 중앙 배치
+    if(c.keyword){
+      return `
+        <div class="review-card ${c.span} review-card--keyword">
+          <div class="review-label">${escapeHTML(c.label)}</div>
+          <div class="review-thumb">
+            <div class="review-keyword">${c.value}</div>
+          </div>
+        </div>
+      `;
+    }
+    // 일반 카드: 이미지 → 하단 값
     const imgPart = c.img
       ? `<div class="review-thumb"><img src="${c.img}" alt="${escapeHTML(c.label)} thumbnail"></div>`
       : `<div class="review-thumb" aria-hidden="true"></div>`;
