@@ -593,20 +593,26 @@ function renderSummary(){
         document.getElementById('doneText').textContent =
         `${state.name}, your reservation number is ${rn}`;
 
-        renderReceipt({
-            mountId:'receiptFinal',
-            name: state.name,
-            reservationNumber: rn,         // ← 예약번호 반영
-            date: new Date(),
-            shape: state.shape,
-            fabric: state.fabricEn || state.fabric,
-            fabricColor: state.fabricColor,
-            lace: state.lace,
-            laceColor: state.laceColor,
-            keyword: state.keyword,
-            cubicColor: state.cubicColor
-        });
         show(8);
+
+    // ✅ 오버레이 표시 → 다음 프레임에 렌더(스피너 먼저 그려지게)
+  showReceiptOverlay();
+  requestAnimationFrame(() => {
+    renderReceipt({
+      mountId:'receiptFinal',
+      name: state.name || '',
+      reservationNumber: rn,
+      date: new Date(),
+      shape: state.shape || '',
+      fabric: state.fabricEn || state.fabric || '',
+      fabricColor: state.fabricColor || '',
+      lace: state.lace || state.laceType || '',
+      laceColor: state.laceColor || '',
+      keyword: state.keyword || '',
+      cubicColor: state.cubicColor || ''
+      });
+    waitReceiptImagesThenHide(); // 이미지 다 로드되면 오버레이 숨김
+  });
 
       }catch(err){
         errBox.textContent = 'Submit failed: ' + err.message;
@@ -663,10 +669,6 @@ function renderSummary(){
     }));
     hideReceiptOverlay();
   }
-
-  showReceiptOverlay();
-  renderReceipt({ mountId:'receiptFinal' /*, ...기존 옵션들... */ });
-  waitReceiptImagesThenHide();
 
   // 영수증 렌더링
   function renderReceipt({mountId, name, reservationNumber, date, shape, fabric, fabricColor, lace, laceColor, keyword, cubicColor}){
