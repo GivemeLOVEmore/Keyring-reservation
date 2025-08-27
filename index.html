@@ -156,7 +156,15 @@
   <div class="step hidden" id="s7">
     <h2>Step 7: Review your choices and confirm</h2>
     <div id="summary"></div>
+
+    <div id="reviewGrid" class="review-grid" aria-label="Selected options"></div>
+
     <div class="error" id="submitError" style="display:none;"></div>
+    <div class="actions">
+      <button class="circle-btn back" onclick="back(6)" aria-label="Back">←<span class="sr-only">Back</span></button>
+      <button class="circle-btn next" id="submitBtn" onclick="submitForm()" aria-label="Submit">✓<span class="sr-only">Submit</span></button>
+    </div>
+    
     <div class="actions">
       <button class="circle-btn back" onclick="back(6)" aria-label="Back">←<span class="sr-only">Back</span></button>
       <button class="circle-btn next" id="submitBtn" onclick="submitForm()" aria-label="Submit">✓<span class="sr-only">Submit</span></button>
@@ -438,18 +446,102 @@
     }
 
     /* ===== Step 7 요약 ===== */
-    function renderSummary(){
-      const s = document.getElementById('summary');
-      s.innerHTML = `
-        <div><b>Shape:</b> ${state.shape}</div>
-        <div><b>Fabric:</b> ${state.fabricEn || state.fabric} — ${state.fabricColor}</div>
-        <div><b>Lace:</b> ${state.lace} — ${state.laceColor}</div>
-        <div><b>Cubic Keyword:</b> "${escapeHTML(state.keyword)}"</div>
-        <div><b>Cubic Color:</b> ${state.cubicColor}</div>
-      `;
-      const err = document.getElementById('submitError');
-      err.style.display='none'; err.textContent='';
+function renderSummary(){
+  // 안전 이스케이프 유지
+  const esc = s => String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+  // 썸네일 소스 매핑
+  const SHAPE_IMG = {
+    'Heart':'images/shape-heart.png?v=2',
+    'Round':'images/shape-round.png?v=2',
+    'Rectangle':'images/shape-rectangle.png?v=2'
+  };
+  const CUBIC_IMG = {
+    'Clear':'images/cubic-clear.png?v=2',
+    'Black':'images/cubic-black.png?v=2',
+    'Pink':'images/cubic-pink.png?v=2',
+    'Sky Blue':'images/cubic-blue.png?v=2'
+  };
+
+  // 선택된 Fabric/Lace 칩 이미지 역참조
+  const getFabricThumb = () => {
+    if(!state.fabric || !state.fabricColorId) return '';
+    const cfg = FABRIC_CONFIG[state.fabric];
+    const c = cfg?.colors?.find(x=>x.id===state.fabricColorId);
+    return c?.imageUrl || '';
+  };
+  const getLaceThumb = () => {
+    if(!state.laceType || !state.laceColorId) return '';
+    const cfg = LACE_CONFIG[state.laceType];
+    const c = cfg?.colors?.find(x=>x.id===state.laceColorId);
+    return c?.imageUrl || '';
+  };
+
+  // 카드 데이터(라벨, 썸네일, 값)
+  const cards = [
+    {
+      label:'Shape',
+      img: SHAPE_IMG[state.shape] || '',
+      value: esc(state.shape||'-')
+    },
+    {
+      label:'Fabric',
+      img: getFabricThumb(),
+      value: esc((state.fabricEn||state.fabric||'-')) + (state.fabricColor ? ' — ' + esc(state.fabricColor) : '')
+    },
+    {
+      label:'Lace',
+      img: getLaceThumb(),
+      value: esc(state.lace||'-') + (state.laceColor ? ' / ' + esc(state.laceColor) : '')
+    },
+    {
+      label:'Cubic Color',
+      img: CUBIC_IMG[state.cubicColor] || '',
+      value: esc(state.cubicColor||'-')
+    },
+    {
+      label:'Cubic Keyword',
+      img: '', // 이미지가 없으므로 텍스트 카드로만 표기
+      value: '"' + esc(state.keyword||'-') + '"'
+    },
+    {
+      label:'Name / Date',
+      img: '', // 미리보기엔 텍스트만
+      value: esc(state.name||'-') + ' · ' + esc(formatDateK(new Date()))
     }
+  ];
+
+  // 상단 요약 텍스트(간단 유지)
+  const s = document.getElementById('summary');
+  if(s){
+    s.innerHTML = `
+      <div><b>Shape:</b> ${esc(state.shape||'-')}</div>
+      <div><b>Fabric:</b> ${esc(state.fabricEn||state.fabric||'-')} — ${esc(state.fabricColor||'-')}</div>
+      <div><b>Lace:</b> ${esc(state.lace||'-')} — ${esc(state.laceColor||'-')}</div>
+      <div><b>Cubic Keyword:</b> "${esc(state.keyword||'-')}"</div>
+      <div><b>Cubic Color:</b> ${esc(state.cubicColor||'-')}</div>
+    `;
+    const err = document.getElementById('submitError');
+    if(err){ err.style.display='none'; err.textContent=''; }
+  }
+
+  // 카드 그리드 렌더
+  const grid = document.getElementById('reviewGrid');
+  if(grid){
+    grid.innerHTML = cards.map(c=>{
+      const imgPart = c.img
+        ? `<div class="review-thumb"><img src="${c.img}" alt="${esc(c.label)} thumbnail" /></div>`
+        : `<div class="review-thumb" aria-hidden="true"></div>`; // 이미지 없을 땐 빈 박스 유지(일관된 높이)
+      return `
+        <div class="review-card">
+          <div class="review-label">${esc(c.label)}</div>
+          ${imgPart}
+          <div class="review-value">${c.value}</div>
+        </div>
+      `;
+    }).join('');
+  }
+}
 
     /* ===== 제출 ===== */
     async function submitForm(){
