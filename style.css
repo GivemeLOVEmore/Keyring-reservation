@@ -472,6 +472,7 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   font-weight: 400;  /* 볼드 없음 */
   line-height: 1.4;
   text-align: center;
+  margin-bottom :20px;
   color:#FEF7FC;
 }
 
