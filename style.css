@@ -210,7 +210,7 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
 }
 
 /* 바코드는 폭에 맞춰 유동 */
-.rc-barcode img{ width: 50%; height: auto; }
+.rc-barcode img{ width: 65%; height: auto; }
 
 /* 구분선 여백(모바일에서도 유지) */
 .rc-sep{ margin: 18px 0; }
