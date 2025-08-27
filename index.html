@@ -664,6 +664,10 @@ function renderSummary(){
     hideReceiptOverlay();
   }
 
+  showReceiptOverlay();
+  renderReceipt({ mountId:'receiptFinal' /*, ...기존 옵션들... */ });
+  waitReceiptImagesThenHide();
+
   // 영수증 렌더링
   function renderReceipt({mountId, name, reservationNumber, date, shape, fabric, fabricColor, lace, laceColor, keyword, cubicColor}){
     const mount = document.getElementById(mountId);
