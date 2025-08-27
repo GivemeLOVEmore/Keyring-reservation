@@ -401,6 +401,24 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   .review-card{ min-height: fit-content; }
 }
 
+/* 키워드 카드: 텍스트를 썸네일 영역 중앙에 표시 */
+.review-card--keyword .review-thumb{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.review-card--keyword .review-value{ display:none; } /* 하단 값 영역 숨김 */
+
+.review-keyword{
+  color:#2D2A2E;           /* 어두운 본문색 (영수증 톤과 일치) */
+  font-size:14px;
+  line-height:1.35;
+  text-align:center;
+  padding:0 8px;
+  overflow-wrap:anywhere;
+}
+
 
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
 /* .rc-item .r.wrap { white-space: normal; word-break: keep-all; } */
