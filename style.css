@@ -418,6 +418,50 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   padding:0 8px;
   overflow-wrap:anywhere;
 }
+.receipt-card{
+  /* 좌우 테두리만 유지 */
+  border-left: 2px solid #F4C7D7;
+  border-right: 2px solid #F4C7D7;
+  border-top: 0;
+  border-bottom: 0;
+  position: relative;
+  overflow: visible; /* 양 끝 오버행 허용 */
+  /* 조절용 변수 (원하면 값만 바꿔서 톱니 크기 변경) */
+  --zig: #F4C7D7;      /* 지그재그 색 = 기존 테두리 색 */
+  --bw: 2px;           /* 좌우 보더 두께 */
+  --tooth-w: 10px;     /* 톱니 하나의 가로 절반 (전체 주기 = 2 * tooth-w) */
+  --tooth-h: 8px;      /* 톱니 높이 */
+}
+
+/* 위쪽 지그재그 */
+.receipt-card::before,
+.receipt-card::after{
+  content:"";
+  position:absolute;
+  left: calc(-1 * var(--bw));                 /* 좌우로 살짝 넘겨서 보더와 매끈하게 연결 */
+  width: calc(100% + (2 * var(--bw)));        /* 오른쪽도 동일 오버행 */
+  height: var(--tooth-h);
+  pointer-events:none;
+  z-index: 1;
+}
+
+/* 위 */
+.receipt-card::before{
+  top: 0;
+  background:
+    conic-gradient(from 135deg at var(--tooth-w) 0,
+      var(--zig) 0 90deg, transparent 0 360deg)
+    left top / calc(var(--tooth-w) * 2) var(--tooth-h) repeat-x;
+}
+
+/* 아래 */
+.receipt-card::after{
+  bottom: 0;
+  background:
+    conic-gradient(from -45deg at var(--tooth-w) 100%,
+      var(--zig) 0 90deg, transparent 0 360deg)
+    left bottom / calc(var(--tooth-w) * 2) var(--tooth-h) repeat-x;
+}
 
 
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
