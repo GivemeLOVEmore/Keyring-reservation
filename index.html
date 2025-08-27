@@ -640,7 +640,6 @@ function renderSummary(){
     if(!mount) return;
     const hasLogo = !!LOGO_URL;
     const rn = reservationNumber || 'PREPARING';
-    const barcodeUrl = "https://via.placeholder.com/300x80?text=BARCODE";
     const dateStr = formatDateK(date);
     const rows = [
       ['Shape', escapeHTML(shape||'-')],
@@ -674,7 +673,7 @@ function renderSummary(){
         </div>
         <div class="rc-sep"></div>
         <div class="rc-barcode">
-          <img src="https://via.placeholder.com/320x80?text=BARCODE" alt="Barcode"/>
+          <img src="images/barcode.png?v=2" alt="Barcode"/>
           <div class="rc-serial monospace">${escapeHTML(rn)}</div>
         </div>
         <div class="rc-sep dotted"></div>
