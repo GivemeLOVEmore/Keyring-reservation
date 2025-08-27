@@ -447,10 +447,7 @@
 
     /* ===== Step 7 요약 ===== */
 function renderSummary(){
-  // 안전 이스케이프 유지
-  const esc = s => String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-
-  // 썸네일 소스 매핑
+  // 기존 escapeHTML/formatDateK, CONFIG들 그대로 사용
   const SHAPE_IMG = {
     'Heart':'images/shape-heart.png?v=2',
     'Round':'images/shape-round.png?v=2',
@@ -462,8 +459,6 @@ function renderSummary(){
     'Pink':'images/cubic-pink.png?v=2',
     'Sky Blue':'images/cubic-blue.png?v=2'
   };
-
-  // 선택된 Fabric/Lace 칩 이미지 역참조
   const getFabricThumb = () => {
     if(!state.fabric || !state.fabricColorId) return '';
     const cfg = FABRIC_CONFIG[state.fabric];
@@ -477,72 +472,60 @@ function renderSummary(){
     return c?.imageUrl || '';
   };
 
-  // 카드 데이터(라벨, 썸네일, 값)
+  // === 2×3 순서 ===
+  // 1줄(위): Shape, Keyword  → 각 span-3
+  // 2줄(아래): Fabric, Lace, Cubic Color → 각 span-2
   const cards = [
     {
       label:'Shape',
       img: SHAPE_IMG[state.shape] || '',
-      value: esc(state.shape||'-')
+      value: escapeHTML(state.shape || '-'),
+      span: 'span-3'
+    },
+    {
+      label:'Cubic Keyword',
+      img: '', // 키워드는 썸네일 없음
+      value: '"' + escapeHTML(state.keyword || '-') + '"',
+      span: 'span-3'
     },
     {
       label:'Fabric',
       img: getFabricThumb(),
-      value: esc((state.fabricEn||state.fabric||'-')) + (state.fabricColor ? ' — ' + esc(state.fabricColor) : '')
+      value: escapeHTML(state.fabricEn || state.fabric || '-') +
+             (state.fabricColor ? ' — ' + escapeHTML(state.fabricColor) : ''),
+      span: 'span-2'
     },
     {
       label:'Lace',
       img: getLaceThumb(),
-      value: esc(state.lace||'-') + (state.laceColor ? ' / ' + esc(state.laceColor) : '')
+      value: escapeHTML(state.lace || '-') +
+             (state.laceColor ? ' / ' + escapeHTML(state.laceColor) : ''),
+      span: 'span-2'
     },
     {
       label:'Cubic Color',
       img: CUBIC_IMG[state.cubicColor] || '',
-      value: esc(state.cubicColor||'-')
-    },
-    {
-      label:'Cubic Keyword',
-      img: '', // 이미지가 없으므로 텍스트 카드로만 표기
-      value: '"' + esc(state.keyword||'-') + '"'
-    },
-    {
-      label:'Name / Date',
-      img: '', // 미리보기엔 텍스트만
-      value: esc(state.name||'-') + ' · ' + esc(formatDateK(new Date()))
+      value: escapeHTML(state.cubicColor || '-'),
+      span: 'span-2'
     }
   ];
 
-  // 상단 요약 텍스트(간단 유지)
-  const s = document.getElementById('summary');
-  if(s){
-    s.innerHTML = `
-      <div><b>Shape:</b> ${esc(state.shape||'-')}</div>
-      <div><b>Fabric:</b> ${esc(state.fabricEn||state.fabric||'-')} — ${esc(state.fabricColor||'-')}</div>
-      <div><b>Lace:</b> ${esc(state.lace||'-')} — ${esc(state.laceColor||'-')}</div>
-      <div><b>Cubic Keyword:</b> "${esc(state.keyword||'-')}"</div>
-      <div><b>Cubic Color:</b> ${esc(state.cubicColor||'-')}</div>
-    `;
-    const err = document.getElementById('submitError');
-    if(err){ err.style.display='none'; err.textContent=''; }
-  }
-
-  // 카드 그리드 렌더
   const grid = document.getElementById('reviewGrid');
-  if(grid){
-    grid.innerHTML = cards.map(c=>{
-      const imgPart = c.img
-        ? `<div class="review-thumb"><img src="${c.img}" alt="${esc(c.label)} thumbnail" /></div>`
-        : `<div class="review-thumb" aria-hidden="true"></div>`; // 이미지 없을 땐 빈 박스 유지(일관된 높이)
-      return `
-        <div class="review-card">
-          <div class="review-label">${esc(c.label)}</div>
-          ${imgPart}
-          <div class="review-value">${c.value}</div>
-        </div>
-      `;
-    }).join('');
-  }
-}
+  if(!grid) return;
 
+  grid.innerHTML = cards.map(c=>{
+    const imgPart = c.img
+      ? `<div class="review-thumb"><img src="${c.img}" alt="${escapeHTML(c.label)} thumbnail"></div>`
+      : `<div class="review-thumb" aria-hidden="true"></div>`;
+    return `
+      <div class="review-card ${c.span}">
+        <div class="review-label">${escapeHTML(c.label)}</div>
+        ${imgPart}
+        <div class="review-value">${c.value}</div>
+      </div>
+    `;
+  }).join('');
+}
     /* ===== 제출 ===== */
     async function submitForm(){
       const btn=document.getElementById('submitBtn');
