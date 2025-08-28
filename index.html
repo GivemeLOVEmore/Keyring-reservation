@@ -16,7 +16,7 @@
     <!-- Open Graph / 카카오톡 · 페북 · 디스코드 미리보기 -->
   <meta property="og:title" content="Give me LOVE" />
   <meta property="og:description" content="나만의 커스텀 키링을 예약하세요." />
-  <meta property="og:image" content="https://givemelovemore.github.io/Keyring-reservation/images/graph-logo.jpeg?v=3" />
+  <meta property="og:image" content="https://givemelovemore.github.io/Keyring-reservation/images/graph-logo.jpeg?v=4" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:url" content="https://givemelovemore.github.io/Keyring-reservation/" />
@@ -948,6 +948,30 @@ document.getElementById('checkLookupBtn')?.addEventListener('click', (e)=>{
   });
 });
 
+(function enforceNumericPhone(){
+  const ids = ['phone','chkPhone']; // Step1 폰 인풋 id, 팝업 폰 인풋 id
+  ids.forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    // 키패드/패턴 힌트
+    el.setAttribute('inputmode','numeric');
+    el.setAttribute('pattern','[0-9]*');
+    el.setAttribute('maxlength','11'); // 필요시 10~11로 조정
+
+    // 숫자만 남기기
+    const toDigits = e => { 
+      const v = e.target.value.replace(/\D/g,'');
+      if (e.target.value !== v) e.target.value = v;
+    };
+    el.addEventListener('input', toDigits);
+    el.addEventListener('paste', e=>{
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text') || '';
+      el.value = text.replace(/\D/g,'');
+      el.dispatchEvent(new Event('input',{bubbles:true}));
+    });
+  });
+})();
 
     // 초기화
     show(1);
