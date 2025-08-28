@@ -220,7 +220,7 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   width: auto;
   height: 140px;            /* 필요하면 120px로 더 키워도 됨 */
   object-fit: contain;
-  margin: 4px 0 6px;
+  margin: 2px 0 2px;
 }
 .rc-thanks{ font-style: italic; }
 
@@ -233,7 +233,7 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   /* 영수증 기본 글자 약간 축소 */
   .receipt-card{ font-size: 13px; }
 
-  .rc-logo--big { height: 96px; }
+  .rc-logo--big { height: 80px; }
 
   /* 라벨 폭 줄여 값 영역 확보 */
   .rc-info-row .l,
