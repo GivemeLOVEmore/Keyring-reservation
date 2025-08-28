@@ -30,7 +30,11 @@
 </head>
   
 <body>
-  <h1>Give me LOVE</h1>
+  <div class="app-brand">
+    <a href="/" class="app-brand__link" aria-label="Give me LOVE">
+      <img id="brandLogo" class="app-brand__img" alt="Give me LOVE" />
+    </a>
+  </div>
   <p class="subtitle">Make a custom filled with love.</p>
 
   <!-- Step 1 -->
@@ -189,6 +193,13 @@
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzDmUw-P8BeIdqE9eSW9uMGTJtQxuUnzTrmIA9DjRhAaVZ_2SA7sov_8wjfNL-HwjFj8Q/exec';
     const LOGO_URL = "images/givemelove-logo.png?v=2"; // ← 실제 로고 이미지 경로 넣기
     const THANKS_HEADER = "Have a day full of love.";
+
+    (function(){
+      const el = document.getElementById('brandLogo');
+      if(!el) return;
+      const url = (typeof LOGO_URL !== 'undefined' && LOGO_URL) ? LOGO_URL : 'images/logo.png';
+      el.src = url + '?v=1'; // 캐시 갱신용 쿼리(선택)
+    })();
     // 상태
     const state = {
       name:'', phone:'', xid:'', privacy:false,
