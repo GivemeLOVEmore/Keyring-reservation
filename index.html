@@ -51,6 +51,14 @@
       <button class="circle-btn next" onclick="go(2)" aria-label="Next">→<span class="sr-only">Next</span></button>
     </div>
   </div>
+  
+  <button id="checkOpenBtn" class="fab fab--left" aria-label="예약 내역 확인">
+    <!-- 인라인 SVG 아이콘 (버튼 글자색을 따라감: currentColor) -->
+   <svg class="fab__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+     <circle cx="12" cy="8" r="3.5" fill="currentColor"></circle>
+     <path d="M4 19.5c0-3.6 3.9-5.5 8-5.5s8 1.9 8 5.5" fill="currentColor"></path>
+   </svg>
+  </button>
 
   <!-- Step 2 -->
   <div class="step hidden" id="s2">
@@ -211,6 +219,10 @@
       // Step5/6
       keyword:'', cubicColor:''
     };
+    
+    document.getElementById('checkOpenBtn')?.addEventListener('click', () => {
+      if (typeof openLookupPanel === 'function') openLookupPanel();
+    });
 
     /* 공통 내비 */
     function show(step){ for(let i=1;i<=8;i++){ const el=document.getElementById('s'+i); if(el) el.classList.toggle('hidden', i!==step); } }
@@ -221,6 +233,7 @@
       el.classList.add('selected');
       state[key]=el.dataset.value;
     }
+    
 
     function go(step){
       if(step===2){
