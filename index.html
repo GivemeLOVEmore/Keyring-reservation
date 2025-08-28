@@ -179,10 +179,6 @@
     
     <div id="receiptArea" class="receipt-area">
       <div id="receiptFinal" class="receipt"></div> <!-- renderReceipt가 여기 렌더됨 -->
-      <div class="rc-overlay" id="receiptOverlay" role="status" aria-live="polite">
-        <div class="rc-spinner" aria-hidden="true"></div>
-        <p class="rc-msg">예약 내용을 준비 중입니다…</p>
-      </div>
     </div>
   </div>
 
@@ -226,6 +222,7 @@
       }
       if(step===7){
         // Step7 들어가기 전 검증(필요 항목 확인)
+        hideS7Overlay();
         state.keyword = document.getElementById('keyword').value.trim();
         if(!state.shape || !state.fabric || !state.fabricColor || !state.lace || !state.laceColor || !state.keyword || !state.cubicColor){
           alert('Please complete all selections.');
@@ -602,11 +599,7 @@ function hideS7Overlay(){ document.getElementById('s7Overlay')?.classList.remove
         const rn = data.reservationNumber || 'PREPARING';
         document.getElementById('doneText').textContent =
         `${state.name}, your reservation number is ${rn}`;
-
-
-    hideS7Overlay();   // ← 여기서 먼저 끕니다 (7페이지 전용 오버레이)
-    show(8);
-            // ✅ 오버레이 표시 → 다음 프레임에 렌더(스피너 먼저 그려지게)
+    
     renderReceipt({
       mountId:'receiptFinal',
       name: state.name || '',
@@ -621,6 +614,11 @@ function hideS7Overlay(){ document.getElementById('s7Overlay')?.classList.remove
       cubicColor: state.cubicColor || ''
       });
   }
+
+    await waitReceiptImages('#receiptFinal');
+    hideS7Overlay();   // ← 여기서 먼저 끕니다 (7페이지 전용 오버레이)
+    show(8);
+      
       catch(err){
         hideS7Overlay();  // (6) 실패 시 7페이지 오버레이 해제
         errBox.textContent = 'Submit failed: ' + err.message;
@@ -657,27 +655,6 @@ function hideS7Overlay(){ document.getElementById('s7Overlay')?.classList.remove
     return `${yyyy}.${mm}.${dd} (${ddd})`;
   }
 
-  function showReceiptOverlay(){ document.getElementById('receiptOverlay')?.classList.add('show'); }
-  function hideReceiptOverlay(){ document.getElementById('receiptOverlay')?.classList.remove('show'); }
-
-  // receiptFinal 내부 이미지 로딩이 끝나면 오버레이 해제
-  async function waitReceiptImagesThenHide(){
-    const wrap = document.getElementById('receiptFinal');
-    if(!wrap){ hideReceiptOverlay(); return; }
-    const imgs = Array.from(wrap.querySelectorAll('img'));
-    if(imgs.length === 0){ hideReceiptOverlay(); return; }
-    await Promise.all(imgs.map(img=>{
-      if (img.complete) {
-        // 일부 브라우저는 decode 지원
-        return img.decode ? img.decode().catch(()=>{}) : Promise.resolve();
-      }
-      return new Promise(res=>{
-        img.addEventListener('load', res, {once:true});
-        img.addEventListener('error', res, {once:true});
-      });
-    }));
-    hideReceiptOverlay();
-  }
 
   // 영수증 렌더링
   function renderReceipt({mountId, name, reservationNumber, date, shape, fabric, fabricColor, lace, laceColor, keyword, cubicColor}){
