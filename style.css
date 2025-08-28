@@ -476,25 +476,31 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   color:#F08FB5;
 }
 
-#s7{ position: relative; }
+/* Step7 전용 오버레이(화면 가운데 표시) */
+#s7 { position: relative; }
 #s7 .s7-overlay{
-  position:absolute; inset:0;
-  display:none;                       /* .show 붙이면 표시 */
-  align-items:center; justify-content:center;
+  position: absolute;
+  inset: 0;
+  display: none;                  /* .show 붙이면 표시 */
+  align-items: center;
+  justify-content: center;
   background: rgba(254,247,252,0.8);  /* var(--bg) 톤 */
   backdrop-filter: blur(2px);
-  z-index: 5;
+  z-index: 50;
 }
-#s7 .s7-overlay.show{ display:flex; }
+#s7 .s7-overlay.show{ display: flex; }
 
 #s7 .rc-spinner{
-  width:28px; height:28px; border-radius:50%;
-  border:3px solid #F4C7D7; border-top-color:transparent;
-  animation: s7spin 0.9s linear infinite; margin-right:10px;
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 3px solid #F4C7D7; border-top-color: transparent;
+  animation: s7spin 0.9s linear infinite; margin-right: 10px;
 }
-@keyframes s7spin{ to{ transform: rotate(360deg); } }
+@keyframes s7spin { to { transform: rotate(360deg); } }
 
 #s7 .rc-msg{ font-size:14px; color:#2D2A2E; }
+
+/* 혹시 Step8에 남아있는 예전 오버레이가 있다면 강제 비활성 */
+#s8 #receiptOverlay{ display: none !important; }
 
 /* (선택) 혹시 래퍼에 원형 패턴이 적용돼 보이면, 래퍼는 비활성화 */
 #s8 .receipt { border: 0; background: transparent; }
