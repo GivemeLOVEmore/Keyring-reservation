@@ -561,15 +561,19 @@ function renderSummary(){
   }).join('');
 }
 
-    showS7Overlay();
+        // 토글 함수 (없으면 추가)
+function showS7Overlay(){ document.getElementById('s7Overlay')?.classList.add('show'); }
+function hideS7Overlay(){ document.getElementById('s7Overlay')?.classList.remove('show'); }
+    
     /* ===== 제출 ===== */
     async function submitForm(){
       const btn=document.getElementById('submitBtn');
       const errBox=document.getElementById('submitError');
       btn.disabled=true; btn.textContent='…';
       errBox.style.display='none'; errBox.textContent='';
+      showS7Overlay();
 
-      try{
+  try{
         const fd = new FormData();
         fd.append('name', state.name);
         fd.append('phone', state.phone);
@@ -595,14 +599,6 @@ function renderSummary(){
           throw new Error(reason);
         }
 
-        // 토글 함수 (없으면 추가)
-function showS7Overlay(){ document.getElementById('s7Overlay')?.classList.add('show'); }
-function hideS7Overlay(){ document.getElementById('s7Overlay')?.classList.remove('show'); }
-
-// submitForm() 시작부 — 요청 보낼 때 즉시 켜기
-btn.disabled = true; btn.textContent = '…';
-showS7Overlay();
-
         const rn = data.reservationNumber || 'PREPARING';
         document.getElementById('doneText').textContent =
         `${state.name}, your reservation number is ${rn}`;
@@ -624,9 +620,8 @@ showS7Overlay();
       keyword: state.keyword || '',
       cubicColor: state.cubicColor || ''
       });
-
-
-      }catch(err){
+  }
+      catch(err){
         hideS7Overlay();  // (6) 실패 시 7페이지 오버레이 해제
         errBox.textContent = 'Submit failed: ' + err.message;
         errBox.style.display='block';
@@ -775,8 +770,6 @@ function attachChipsRight(el, panel){
   panel.classList.remove('hidden');
   panel.style.removeProperty('display');
 }
-    function showS7Overlay(){ document.getElementById('s7Overlay')?.classList.add('show'); }
-function hideS7Overlay(){ document.getElementById('s7Overlay')?.classList.remove('show'); }
 
     // 초기화
     show(1);
