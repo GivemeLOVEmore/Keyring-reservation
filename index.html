@@ -824,10 +824,6 @@ function closeLookupPanel(){
   ['chkName','chkPhone','chkRn'].forEach(id => document.getElementById(id)?.classList.remove('is-error'));
 }
 
-// Step1 오버레이
-function showS1Overlay(){ document.getElementById('s1Overlay')?.classList.add('show'); }
-function hideS1Overlay(){ document.getElementById('s1Overlay')?.classList.remove('show'); }
-
 // 에러 표시
 function showLookupError(msg){
   const el = document.getElementById('checkError');
@@ -853,21 +849,30 @@ function validateLookupForm(){
   return ok;
 }
 
-// 조회 제출
 async function handleLookupSubmit(){
+  // 1) 유효성
   if(!validateLookupForm()) return;
+
   const name  = document.getElementById('chkName').value.trim();
   const phone = document.getElementById('chkPhone').value.trim();
   const rn    = document.getElementById('chkRn').value.trim();
 
-  showS1Overlay();
+  // 2) 하단 상태메시지: 확인 중…
+  const msg = document.getElementById('checkError');
+  if (msg) {
+    msg.classList.add('status');
+    msg.textContent = '예약 정보를 확인 중입니다…';
+    msg.hidden = false;
+  }
+
   try{
-    const qs = new URLSearchParams({ action:'lookup', name, phone, rn }).toString();
+    // 3) 조회
+    const qs  = new URLSearchParams({ action:'lookup', name, phone, rn }).toString();
     const res = await fetch(`${WEB_APP_URL}?${qs}`, { method:'GET', cache:'no-cache' });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok !== true) throw new Error((data && data.error) || 'NOT_FOUND');
 
-    // 응답 → state 주입
+    // 4) 상태 주입
     const row = data.row || {};
     state.name        = row.name  || '';
     state.phone       = row.phone || '';
@@ -878,11 +883,12 @@ async function handleLookupSubmit(){
     state.laceColor   = row.laceColor || '';
     state.keyword     = row.keyword || '';
     state.cubicColor  = row.color || '';
+
     // 완료 문구 숨김
     const dt = document.getElementById('doneText');
     if(dt){ dt.textContent=''; dt.style.display='none'; }
 
-    // 영수증 렌더 → 8페이지
+    // 5) 영수증 렌더 → 8페이지
     renderReceipt({
       mountId:'receiptFinal',
       name: state.name || '',
@@ -896,12 +902,18 @@ async function handleLookupSubmit(){
       keyword: state.keyword || '',
       cubicColor: state.cubicColor || ''
     });
+
+    // 메시지 감추고 패널 닫고 이동
+    if (msg) { msg.hidden = true; msg.classList.remove('status'); }
     closeLookupPanel();
     show(8);
   }catch(err){
-    showLookupError('일치하는 예약이 없습니다.');
-  }finally{
-    hideS1Overlay();
+    // 실패: 에러 문구로 전환
+    if (msg) {
+      msg.classList.remove('status');
+      msg.textContent = '일치하는 예약이 없습니다.';
+      msg.hidden = false;
+    }
   }
 }
 
