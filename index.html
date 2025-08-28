@@ -46,32 +46,35 @@
     <div class="row">
       <label><input id="privacy" type="checkbox" /> I agree to provide my personal information (required)</label>
     </div>
-    <div class="actions">
-      <button id="checkOpenBtn" class="circle-btn alt" type="button" aria-label="예약 내역 확인">
-        <svg class="fab__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-          <circle cx="12" cy="8" r="3.5" fill="currentColor"></circle>
-          <path d="M4 19.5c0-3.6 3.9-5.5 8-5.5s8 1.9 8 5.5" fill="currentColor"></path>
-        </svg>
-      </button>
+<div class="actions">
+  <!-- 예약내역 확인 (왼쪽 원형) -->
+  <button id="checkOpenBtn" class="circle-btn alt" type="button" aria-label="예약 내역 확인">
+    <svg class="fab__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <circle cx="12" cy="8" r="3.5" fill="currentColor"></circle>
+      <path d="M4 19.5c0-3.6 3.9-5.5 8-5.5s8 1.9 8 5.5" fill="currentColor"></path>
+    </svg>
+  </button>
 
-      <button type="button" id="checkSubmitBtn" class="check-btn">Next</button>
-
-    <div id="checkPanel" class="check-panel" role="dialog" aria-labelledby="checkTitle" hidden>
-      <div class="check-head">
-        <strong id="checkTitle">예약 내역 확인</strong>
-        <button type="button" id="checkCloseBtn" class="check-close" aria-label="닫기">×</button>
-      </div>
-      <div class="check-body">
-        <input id="chkName"  class="chk-inp" type="text" placeholder="Name">
-        <input id="chkPhone" class="chk-inp" type="tel"  placeholder="Phone Number">
-        <input id="chkRn"    class="chk-inp" type="text" value="GM-" placeholder="Reservation No.">
-        <p id="checkError" class="check-error" hidden></p>
-    </div>
-      <div class="check-foot">
-        <button type="button" id="checkSubmitBtn" class="check-btn">Next</button>
-      </div>
-    </div>
+  <!-- 스텝 이동 Next (오른쪽 원형) -->
+  <button class="circle-btn next" type="button" onclick="go(2)" aria-label="Next">
+    →<span class="sr-only">Next</span>
+  </button>
+</div>
+<div id="checkPanel" class="check-panel" role="dialog" aria-labelledby="checkTitle" hidden>
+  <div class="check-head">
+    <strong id="checkTitle">예약 내역 확인</strong>
+    <button type="button" id="checkCloseBtn" class="check-close" aria-label="닫기">×</button>
   </div>
+  <div class="check-body">
+    <input id="chkName"  class="chk-inp" type="text" placeholder="Name">
+    <input id="chkPhone" class="chk-inp" type="tel"  placeholder="Phone Number">
+    <input id="chkRn"    class="chk-inp" type="text" value="GM-" placeholder="Reservation No.">
+    <p id="checkError" class="check-error" hidden></p>
+  </div>
+  <div class="check-foot">
+    <button type="button" id="checkLookupBtn" class="check-btn">Next</button>
+  </div>
+</div>
 
   <!-- Step 2 -->
   <div class="step hidden" id="s2">
@@ -219,7 +222,7 @@
       const el = document.getElementById('brandLogo');
       if(!el) return;
       const url = (typeof LOGO_URL !== 'undefined' && LOGO_URL) ? LOGO_URL : 'images/logo.png';
-      el.src = url + '?v=1'; // 캐시 갱신용 쿼리(선택)
+      el.src = url.includes('?') ? (url + '&v=1') : (url + '?v=1');
     })();
     // 상태
     const state = {
@@ -927,7 +930,7 @@ document.getElementById('checkCloseBtn')?.addEventListener('click', (e)=>{
 });
     
 // 팝업 Next: 기본 submit/네비게이션 차단 후 조회 실행
-document.getElementById('checkSubmitBtn')?.addEventListener('click', (e)=>{
+document.getElementById('checkLookupBtn')?.addEventListener('click', (e)=>{
   e.preventDefault(); e.stopPropagation();
   handleLookupSubmit();
 });
