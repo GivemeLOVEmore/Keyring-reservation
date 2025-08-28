@@ -171,7 +171,8 @@ button{ font-family:inherit; }
 .rc-barcode img{ width:320px; height:80px; object-fit:contain; background:#fff; border:1px solid #eee; }
 .rc-serial{ font-size:16px; letter-spacing:.5px; }
 .rc-footer{ margin-top:4px; font-size:12px; color:#6B646A; text-align:center; }
-.rc-footer .rc-note{ margin-bottom:20px; }
+.rc-footer .rc-note{margin-bottom:10px;}
+.rc-footer .re-sns{margin-bottom:20px;}
 
 /* === Receipt & 헤더 반응형 타이포그래피 === */
 
