@@ -562,44 +562,44 @@ function renderSummary(){
 function showS7Overlay(){ document.getElementById('s7Overlay')?.classList.add('show'); }
 function hideS7Overlay(){ document.getElementById('s7Overlay')?.classList.remove('show'); }
     
-    /* ===== 제출 ===== */
-    async function submitForm(){
-      const btn=document.getElementById('submitBtn');
-      const errBox=document.getElementById('submitError');
-      btn.disabled=true; btn.textContent='…';
-      errBox.style.display='none'; errBox.textContent='';
-      showS7Overlay();
+async function submitForm(){
+  const btn = document.getElementById('submitBtn');
+  const errBox = document.getElementById('submitError');
+  btn.disabled = true; btn.textContent = '…';
+  errBox.style.display = 'none'; errBox.textContent = '';
+  showS7Overlay(); // 7페이지 중앙 로딩 표시
 
   try{
-        const fd = new FormData();
-        fd.append('name', state.name);
-        fd.append('phone', state.phone);
-        fd.append('xid', state.xid);
-        fd.append('privacy', state.privacy ? 'Y' : 'N');
-        fd.append('shape', state.shape);
-        // 원단/레이스(추가 필드 - 시트가 받지 않더라도 무해)
-        fd.append('fabric', state.fabricEn || state.fabric || '');
-        fd.append('fabricColor', state.fabricColor || '');
-        fd.append('lace', state.lace || '');
-        fd.append('laceColor', state.laceColor || '');
-        // 키워드/큐빅색
-        fd.append('keyword', state.keyword);
-        fd.append('color', state.cubicColor); // 기존 스키마 유지: Cubic Color
-        fd.append('userAgent', navigator.userAgent);
+    const fd = new FormData();
+    fd.append('name', state.name);
+    fd.append('phone', state.phone);
+    fd.append('xid', state.xid);
+    fd.append('privacy', state.privacy ? 'Y' : 'N');
+    fd.append('shape', state.shape);
+    // 원단/레이스
+    fd.append('fabric', state.fabricEn || state.fabric || '');
+    fd.append('fabricColor', state.fabricColor || '');
+    fd.append('lace', state.lace || '');
+    fd.append('laceColor', state.laceColor || '');
+    // 키워드/큐빅색
+    fd.append('keyword', state.keyword);
+    fd.append('color', state.cubicColor);
+    fd.append('userAgent', navigator.userAgent);
 
-        const res = await fetch(WEB_APP_URL, { method:'POST', body: fd });
-        const text = await res.text();
-        let data; try { data = JSON.parse(text); } catch(e){ data = null; }
+    const res  = await fetch(WEB_APP_URL, { method:'POST', body: fd });
+    const text = await res.text();
+    let data; try { data = JSON.parse(text); } catch(e){ data = null; }
+    if (!res.ok || !data || data.ok !== true) {
+      const reason = (data && (data.error || JSON.stringify(data))) || text || (`HTTP ${res.status}`);
+      throw new Error(reason);
+    }
 
-        if(!res.ok || !data || data.ok !== true){
-          const reason = (data && (data.error || JSON.stringify(data))) || text || (`HTTP ${res.status}`);
-          throw new Error(reason);
-        }
+    // 1) 예약번호/문구
+    const rn = data.reservationNumber || 'PREPARING';
+    document.getElementById('doneText').textContent =
+      `${state.name}, your reservation number is ${rn}`;
 
-        const rn = data.reservationNumber || 'PREPARING';
-        document.getElementById('doneText').textContent =
-        `${state.name}, your reservation number is ${rn}`;
-    
+    // 2) 8페이지 영역에 '미리' 렌더
     renderReceipt({
       mountId:'receiptFinal',
       name: state.name || '',
@@ -612,21 +612,22 @@ function hideS7Overlay(){ document.getElementById('s7Overlay')?.classList.remove
       laceColor: state.laceColor || '',
       keyword: state.keyword || '',
       cubicColor: state.cubicColor || ''
-      });
-  }
+    });
 
+    // 3) 영수증 내부 이미지 모두 로딩 대기
     await waitReceiptImages('#receiptFinal');
-    hideS7Overlay();   // ← 여기서 먼저 끕니다 (7페이지 전용 오버레이)
+
+    // 4) 로딩 끄고 → 8페이지로 전환
+    hideS7Overlay();
     show(8);
-      
-      catch(err){
-        hideS7Overlay();  // (6) 실패 시 7페이지 오버레이 해제
-        errBox.textContent = 'Submit failed: ' + err.message;
-        errBox.style.display='block';
-        btn.disabled=false; btn.textContent='✓';
-        
-      }
-    }
+
+  } catch(err){
+    hideS7Overlay();                        // 실패 시에도 반드시 끄기
+    errBox.textContent = 'Submit failed: ' + err.message;
+    errBox.style.display = 'block';
+    btn.disabled = false; btn.textContent = '✓';
+  }
+}
 
     /* ===== 헤더 자동 분리 (Step X / 설명) ===== */
     document.querySelectorAll('.step h2').forEach(h2 => {
@@ -746,6 +747,27 @@ function attachChipsRight(el, panel){
   // 반드시 보이도록 (hidden 제거 + display 인라인 제거)
   panel.classList.remove('hidden');
   panel.style.removeProperty('display');
+}
+
+async function waitReceiptImages(selector = '#receiptFinal', timeoutMs = 8000){
+  const wrap = document.querySelector(selector);
+  if(!wrap) return;
+  const imgs = Array.from(wrap.querySelectorAll('img'));
+  if(imgs.length === 0) return;
+
+  const waitOne = (img) => {
+    if (img.complete) {
+      return img.decode ? img.decode().catch(()=>{}) : Promise.resolve();
+    }
+    return new Promise(res=>{
+      img.addEventListener('load',  res, { once:true });
+      img.addEventListener('error', res, { once:true });
+    });
+  };
+
+  const all = Promise.all(imgs.map(waitOne));
+  if (!timeoutMs) { await all; return; }
+  await Promise.race([ all, new Promise(res => setTimeout(res, timeoutMs)) ]);
 }
 
     // 초기화
