@@ -51,6 +51,28 @@
       <button class="circle-btn next" onclick="go(2)" aria-label="Next">→<span class="sr-only">Next</span></button>
     </div>
   </div>
+
+  <div id="s1Overlay" class="s1-overlay" role="status" aria-live="polite">
+    <div class="rc-spinner" aria-hidden="true"></div>
+    <p class="rc-msg">예약 정보를 확인 중입니다…</p>
+  </div>
+
+<!-- Step1 예약 내역 확인 패널 -->
+<div id="checkPanel" class="check-panel" role="dialog" aria-labelledby="checkTitle" hidden>
+  <div class="check-head">
+    <strong id="checkTitle">예약 내역 확인</strong>
+    <button type="button" id="checkCloseBtn" class="check-close" aria-label="닫기">×</button>
+  </div>
+  <div class="check-body">
+    <input id="chkName"  class="chk-inp" type="text" placeholder="Name">
+    <input id="chkPhone" class="chk-inp" type="tel"  placeholder="Phone Number">
+    <input id="chkRn"    class="chk-inp" type="text" value="GM-" placeholder="Reservation No.">
+    <p id="checkError" class="check-error" hidden>예약 번호를 잊으셨다면 관리자에게 문의 바랍니다.</p>
+  </div>
+  <div class="check-foot">
+    <button type="button" id="checkSubmitBtn" class="check-btn">Next</button>
+  </div>
+</div>
   
   <button id="checkOpenBtn" class="fab fab--left" aria-label="예약 내역 확인">
     <!-- 인라인 SVG 아이콘 (버튼 글자색을 따라감: currentColor) -->
@@ -794,6 +816,113 @@ async function waitReceiptImages(selector = '#receiptFinal', timeoutMs = 8000){
   if (!timeoutMs) { await all; return; }
   await Promise.race([ all, new Promise(res => setTimeout(res, timeoutMs)) ]);
 }
+// Step1 조회 패널 열기/닫기
+function openLookupPanel(){
+  const p = document.getElementById('checkPanel');
+  if(!p) return;
+  p.hidden = false;
+  document.getElementById('chkRn')?.focus();
+}
+function closeLookupPanel(){
+  const p = document.getElementById('checkPanel');
+  if(!p) return;
+  p.hidden = true;
+  hideLookupError();
+  ['chkName','chkPhone','chkRn'].forEach(id => document.getElementById(id)?.classList.remove('is-error'));
+}
+
+// Step1 오버레이
+function showS1Overlay(){ document.getElementById('s1Overlay')?.classList.add('show'); }
+function hideS1Overlay(){ document.getElementById('s1Overlay')?.classList.remove('show'); }
+
+// 에러 표시
+function showLookupError(msg){
+  const el = document.getElementById('checkError');
+  if(!el) return;
+  el.textContent = msg || '예약 번호를 잊으셨다면 관리자에게 문의 바랍니다.';
+  el.hidden = false;
+}
+function hideLookupError(){ const el=document.getElementById('checkError'); if(el) el.hidden = true; }
+
+// 검증
+function validateLookupForm(){
+  hideLookupError();
+  let ok = true;
+  const name  = document.getElementById('chkName');
+  const phone = document.getElementById('chkPhone');
+  const rn    = document.getElementById('chkRn');
+  [name,phone,rn].forEach(inp=>{
+    if(!inp) return;
+    inp.classList.remove('is-error');
+    if(!inp.value || !inp.value.trim()){ inp.classList.add('is-error'); ok=false; }
+  });
+  if(!ok) showLookupError();
+  return ok;
+}
+
+// 조회 제출
+async function handleLookupSubmit(){
+  if(!validateLookupForm()) return;
+  const name  = document.getElementById('chkName').value.trim();
+  const phone = document.getElementById('chkPhone').value.trim();
+  const rn    = document.getElementById('chkRn').value.trim();
+
+  showS1Overlay();
+  try{
+    const qs = new URLSearchParams({ action:'lookup', name, phone, rn }).toString();
+    const res = await fetch(`${WEB_APP_URL}?${qs}`, { method:'GET', cache:'no-cache' });
+    const data = await res.json().catch(()=>null);
+    if(!res.ok || !data || data.ok !== true) throw new Error((data && data.error) || 'NOT_FOUND');
+
+    // 응답 → state 주입
+    const row = data.row || {};
+    state.name        = row.name  || '';
+    state.phone       = row.phone || '';
+    state.shape       = row.shape || '';
+    state.fabric      = row.fabric || '';
+    state.fabricColor = row.fabricColor || '';
+    state.lace        = row.lace || '';
+    state.laceColor   = row.laceColor || '';
+    state.keyword     = row.keyword || '';
+    state.cubicColor  = row.color || '';
+    // 완료 문구 숨김
+    const dt = document.getElementById('doneText');
+    if(dt){ dt.textContent=''; dt.style.display='none'; }
+
+    // 영수증 렌더 → 8페이지
+    renderReceipt({
+      mountId:'receiptFinal',
+      name: state.name || '',
+      reservationNumber: row.reservationNumber || rn,
+      date: row.timestamp ? new Date(row.timestamp) : new Date(),
+      shape: state.shape || '',
+      fabric: state.fabric || '',
+      fabricColor: state.fabricColor || '',
+      lace: state.lace || '',
+      laceColor: state.laceColor || '',
+      keyword: state.keyword || '',
+      cubicColor: state.cubicColor || ''
+    });
+    closeLookupPanel();
+    show(8);
+  }catch(err){
+    showLookupError('일치하는 예약이 없습니다.');
+  }finally{
+    hideS1Overlay();
+  }
+}
+
+// 이벤트 바인딩 (Step1만)
+document.getElementById('checkOpenBtn')?.addEventListener('click', openLookupPanel);
+document.getElementById('checkCloseBtn')?.addEventListener('click', closeLookupPanel);
+document.getElementById('checkSubmitBtn')?.addEventListener('click', handleLookupSubmit);
+['chkName','chkPhone','chkRn'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('input', ()=>el.classList.remove('is-error'));
+  el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') handleLookupSubmit(); });
+});
+
 
     // 초기화
     show(1);
