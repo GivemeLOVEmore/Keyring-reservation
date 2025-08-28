@@ -597,7 +597,6 @@ async function submitForm(){
     // 키워드/큐빅색
     fd.append('keyword', state.keyword);
     fd.append('color', state.cubicColor);
-    fd.append('userAgent', navigator.userAgent);
 
     const res  = await fetch(WEB_APP_URL, { method:'POST', body: fd });
     const text = await res.text();
@@ -715,7 +714,7 @@ async function submitForm(){
         <div class="rc-sep dotted"></div>
         <div class="rc-footer">
           <div class="rc-note">Thank you for your reservation.</div>
-          <div class="rc-sns">Follow us: @givemelove_official · instagram.com/givemelove_official</div>
+          <div class="rc-sns">@GivemeL0VEmore <br> instagram.com/givemelove.more</div>
         </div>
       </div>`;
   }
