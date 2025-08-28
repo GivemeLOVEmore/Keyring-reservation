@@ -546,6 +546,47 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
 
 .fab__icon{ display:block; }
 
+/* Step1 전용 오버레이 */
+#s1{ position: relative; }
+#s1 .s1-overlay{
+  position:absolute; inset:0; display:none; z-index:60;
+  align-items:center; justify-content:center; flex-direction:column;
+  background: rgba(254,247,252,.8); backdrop-filter: blur(2px);
+}
+#s1 .s1-overlay.show{ display:flex; }
+#s1 .rc-spinner{ width:28px; height:28px; border-radius:50%;
+  border:3px solid #F4C7D7; border-top-color:transparent;
+  animation:s1spin .9s linear infinite; margin-bottom:10px;
+}
+@keyframes s1spin{ to{ transform:rotate(360deg); } }
+#s1 .rc-msg{ font-size:14px; color:#2D2A2E; }
+
+/* 조회 패널 */
+.check-panel{
+  position:absolute; left:50%; transform:translateX(-50%);
+  bottom: calc(88px + env(safe-area-inset-bottom, 0px)); /* 터치바 위 */
+  width: clamp(280px, 80vw, 420px);
+  background:#FFF0F5; border:2px solid var(--fg); border-radius:14px;
+  box-shadow: 0 12px 30px rgba(214,51,132,.18); z-index:61; padding:12px 12px 10px;
+}
+.check-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.check-head strong{ color:#D63384; font-weight:700; }
+.check-close{ background:none; border:0; font-size:20px; line-height:1; color:#D63384; cursor:pointer; }
+.check-body{ display:grid; gap:8px; }
+.chk-inp{
+  width:100%; padding:10px 12px; border:2px solid #F4C7D7; border-radius:12px;
+  background:#fff; outline:0; font-size:14px;
+}
+.chk-inp.is-error{ border-color:#D63384; box-shadow:0 0 0 2px rgba(214,51,132,.12); }
+.check-error{ margin:4px 2px 0; color:#D63384; font-size:12px; }
+.check-foot{ margin-top:10px; }
+.check-btn{
+  width:100%; height:42px; border-radius:999px; border:0; cursor:pointer;
+  background:var(--fg); color:#fff; font-weight:700; box-shadow:0 8px 18px rgba(214,51,132,.22);
+}
+.check-btn:active{ transform:translateY(1px); }
+
+
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
 /* .rc-item .r.wrap { white-space: normal; word-break: keep-all; } */
 
