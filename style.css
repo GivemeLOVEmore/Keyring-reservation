@@ -153,8 +153,8 @@ button{ font-family:inherit; }
   gap: 8px;                /* 로고와 문구 간 간격 */
 }
 .rc-logo--big{
-  width: auto;
-  height: 96px;            /* 필요하면 120px로 더 키워도 됨 */
+  width: 70%;
+  height: auto;            /* 필요하면 120px로 더 키워도 됨 */
   object-fit: contain;
   margin: 4px 0 6px;
 }
