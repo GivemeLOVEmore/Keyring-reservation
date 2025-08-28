@@ -3,7 +3,7 @@
 *{box-sizing:border-box}
 body{ background:var(--bg); color:#D63384; font-family:system-ui,-apple-system,Arial,sans-serif; margin:0; padding:24px; text-align:center; }
 h1{ margin:0 0 8px; color:#D63384;}
-.subtitle{ margin:0 0 24px 24px; opacity:.85; font-style:italic;}
+.subtitle{ margin:18px 0 24px 0; opacity:.85; font-style:italic;}
 .app-brand{ display:flex; justify-content:center; align-items:center; padding: 3px 0; }
 .app-brand__img{
   width: clamp(180px, 30vw, 210px);  /* 필요시 숫자만 조정 */
@@ -226,7 +226,7 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   width: auto;
   height: 140px;            /* 필요하면 120px로 더 키워도 됨 */
   object-fit: contain;
-  margin: 20px 0 2px 15px;
+  margin: 20px 0 25px 0;
 }
 .rc-thanks{ font-style: italic; }
 
