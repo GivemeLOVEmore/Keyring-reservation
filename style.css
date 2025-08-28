@@ -586,6 +586,15 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
 }
 .check-btn:active{ transform:translateY(1px); }
 
+/* (안 쓰도록) 혹시 남아있을 수 있는 오버레이 강제 비활성화 */
+#s1Overlay { display: none !important; }
+
+/* 팝업 하단 메시지를 '상태' 모드로 표시할 때 중립색 */
+.check-error.status { color: #6B646A; }
+
+/* 조회 버튼을 circle-btn 톤으로 쓰되 아이콘만 살짝 축소 */
+.circle-btn.alt .fab__icon { width: 20px; height: 20px; }
+
 
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
 /* .rc-item .r.wrap { white-space: normal; word-break: keep-all; } */
