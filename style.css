@@ -233,7 +233,7 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   /* 영수증 기본 글자 약간 축소 */
   .receipt-card{ font-size: 13px; }
 
-  .rc-logo--big { height: 80px; }
+  .rc-logo--big { height: 100px; }
 
   /* 라벨 폭 줄여 값 영역 확보 */
   .rc-info-row .l,
