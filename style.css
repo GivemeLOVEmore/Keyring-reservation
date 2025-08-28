@@ -4,9 +4,9 @@
 body{ background:var(--bg); color:#D63384; font-family:system-ui,-apple-system,Arial,sans-serif; margin:0; padding:24px; text-align:center; }
 h1{ margin:0 0 8px; color:#D63384;}
 .subtitle{ margin:0 0 24px; opacity:.85; font-style:italic;}
-.app-brand{ display:flex; justify-content:center; align-items:center; padding: 8px 0; }
+.app-brand{ display:flex; justify-content:center; align-items:center; padding: 3px 0; }
 .app-brand__img{
-  width: clamp(240px, 30vw, 420px);  /* 필요시 숫자만 조정 */
+  width: clamp(180px, 30vw, 210px);  /* 필요시 숫자만 조정 */
   height: auto;
   display: block;
 }
