@@ -47,40 +47,33 @@
       <label><input id="privacy" type="checkbox" /> I agree to provide my personal information (required)</label>
     </div>
     <div class="actions">
-      <span></span>
-      <button class="circle-btn next" onclick="go(2)" aria-label="Next">→<span class="sr-only">Next</span></button>
+      <button id="checkOpenBtn" class="circle-btn alt" aria-label="예약 내역 확인">
+          <svg class="fab__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.5" fill="currentColor"></circle>
+            <path d="M4 19.5c0-3.6 3.9-5.5 8-5.5s8 1.9 8 5.5" fill="currentColor"></path>
+          </svg>
+        </button>
+
+        <button class="circle-btn next" onclick="go(2)" aria-label="Next">→
+          <span class="sr-only">Next</span>
+        </button>
+
+    <div id="checkPanel" class="check-panel" role="dialog" aria-labelledby="checkTitle" hidden>
+      <div class="check-head">
+        <strong id="checkTitle">예약 내역 확인</strong>
+        <button type="button" id="checkCloseBtn" class="check-close" aria-label="닫기">×</button>
+      </div>
+      <div class="check-body">
+        <input id="chkName"  class="chk-inp" type="text" placeholder="Name">
+        <input id="chkPhone" class="chk-inp" type="tel"  placeholder="Phone Number">
+        <input id="chkRn"    class="chk-inp" type="text" value="GM-" placeholder="Reservation No.">
+        <p id="checkError" class="check-error" hidden></p>
+    </div>
+      <div class="check-foot">
+        <button type="button" id="checkSubmitBtn" class="check-btn">Next</button>
+      </div>
     </div>
   </div>
-
-  <div id="s1Overlay" class="s1-overlay" role="status" aria-live="polite">
-    <div class="rc-spinner" aria-hidden="true"></div>
-    <p class="rc-msg">예약 정보를 확인 중입니다…</p>
-  </div>
-
-<!-- Step1 예약 내역 확인 패널 -->
-<div id="checkPanel" class="check-panel" role="dialog" aria-labelledby="checkTitle" hidden>
-  <div class="check-head">
-    <strong id="checkTitle">예약 내역 확인</strong>
-    <button type="button" id="checkCloseBtn" class="check-close" aria-label="닫기">×</button>
-  </div>
-  <div class="check-body">
-    <input id="chkName"  class="chk-inp" type="text" placeholder="Name">
-    <input id="chkPhone" class="chk-inp" type="tel"  placeholder="Phone Number">
-    <input id="chkRn"    class="chk-inp" type="text" value="GM-" placeholder="Reservation No.">
-    <p id="checkError" class="check-error" hidden>예약 번호를 잊으셨다면 관리자에게 문의 바랍니다.</p>
-  </div>
-  <div class="check-foot">
-    <button type="button" id="checkSubmitBtn" class="check-btn">Next</button>
-  </div>
-</div>
-  
-  <button id="checkOpenBtn" class="fab fab--left" aria-label="예약 내역 확인">
-    <!-- 인라인 SVG 아이콘 (버튼 글자색을 따라감: currentColor) -->
-   <svg class="fab__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-     <circle cx="12" cy="8" r="3.5" fill="currentColor"></circle>
-     <path d="M4 19.5c0-3.6 3.9-5.5 8-5.5s8 1.9 8 5.5" fill="currentColor"></path>
-   </svg>
-  </button>
 
   <!-- Step 2 -->
   <div class="step hidden" id="s2">
