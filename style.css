@@ -595,6 +595,17 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
 /* 조회 버튼을 circle-btn 톤으로 쓰되 아이콘만 살짝 축소 */
 .circle-btn.alt .fab__icon { width: 20px; height: 20px; }
 
+/* 예약내역 확인 팝업: 인풋 가로 100% 강제 */
+#checkPanel .check-body{ grid-template-columns: 1fr; } /* 혹시라도 컬럼 생겼으면 1열 고정 */
+#checkPanel .chk-inp{
+  width:100% !important;
+  display:block;
+  box-sizing:border-box;
+  margin:0;
+  -webkit-appearance:none;
+  appearance:none;
+}
+
 
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
 /* .rc-item .r.wrap { white-space: normal; word-break: keep-all; } */
