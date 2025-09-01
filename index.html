@@ -71,6 +71,21 @@
     <input id="chkRn"    class="chk-inp" type="text" value="GM-" placeholder="Reservation No.">
     <p id="checkError" class="check-error" hidden></p>
   </div>
+  <section id="shipCardPop" class="ship-card ship-card--pop" hidden>
+  <h3 class="ship-title">배송 정보</h3>
+  <p class="ship-sub">
+    해당 제품은 1:1 맞춤 제작 상품으로 제작 기간이 5~10일 소요됩니다.<br>
+    배송이 더 지연될 경우 입력하신 전화번호로 별도 연락 드립니다.<br>
+    기타 문의 사항은 공식 계정으로 예약 내역 캡쳐본과 함께 연락 부탁드립니다.
+  </p>
+  <div class="ship-grid">
+    <div class="ship-left">예약 및 배송 현황</div>
+    <div class="ship-right">
+      <span id="shipStatusPop">제작중</span>
+      <span id="shipTrackPop"></span>
+    </div>
+  </div>
+</section>
   <div class="check-foot">
     <button type="button" id="checkLookupBtn" class="check-btn">Next</button>
   </div>
@@ -816,7 +831,18 @@ function openLookupPanel(){
   const p = document.getElementById('checkPanel');
   if(!p) return;
   p.hidden = false;
-  document.getElementById('chkName')?.focus();
+
+  // 초기화
+  document.getElementById('shipCardPop').hidden = true;
+  hideLookupError();
+
+  const btn = document.getElementById('checkLookupBtn');
+  btn.textContent = 'Next';
+  btn.onclick = (e)=>{ e.preventDefault(); e.stopPropagation(); handleLookupSubmit(); };
+
+  // 포커스는 'Name'으로
+  const nameEl = document.getElementById('chkName');
+  requestAnimationFrame(()=> nameEl?.focus());
 }
 function closeLookupPanel(){
   const p = document.getElementById('checkPanel');
@@ -906,9 +932,21 @@ async function handleLookupSubmit(){
     });
 
     // 메시지 감추고 패널 닫고 이동
-    if (msg) { msg.hidden = true; msg.classList.remove('status'); }
-    closeLookupPanel();
-    show(8);
+if (msg) { msg.hidden = true; msg.classList.remove('status'); }
+// 2) 팝업 안에 배송 정보 표시
+renderShippingInfoPopup({
+  status: row.shippingStatus || row.fulfillment || '',
+  tracking: row.trackingNumber || row.trackingNo || ''
+});
+
+// 3) 버튼을 '영수증 보기'로 바꾸고 눌렀을 때 이동
+const btn = document.getElementById('checkLookupBtn');
+btn.textContent = '영수증 보기';
+btn.onclick = (e)=>{
+  e.preventDefault(); e.stopPropagation();
+  closeLookupPanel();     // 팝업 닫기
+  show(8);                // Step 8로 이동 (이미 렌더되어 있음)
+};
   }catch(err){
     // 실패: 에러 문구로 전환
     if (msg) {
@@ -972,7 +1010,18 @@ document.getElementById('checkLookupBtn')?.addEventListener('click', (e)=>{
     });
   });
 })();
+function renderShippingInfoPopup({ status, tracking }) {
+  const card = document.getElementById('shipCardPop');
+  if (!card) return;
+  const s = (status || '').trim() || '제작중';
+  const t = (tracking || '').trim();
 
+  document.getElementById('shipStatusPop').textContent = s;
+  const tr = document.getElementById('shipTrackPop');
+  tr.textContent = t ? `(${t})` : '';
+
+  card.hidden = false;
+}
     // 초기화
     show(1);
   </script>
