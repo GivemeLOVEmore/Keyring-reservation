@@ -662,6 +662,7 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   line-height: 1.5;
   color: #6B646A;
   text-align: center;
+  display:block;
 }
 .ship-grid{
   display: grid;
