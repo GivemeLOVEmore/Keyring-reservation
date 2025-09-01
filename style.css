@@ -671,8 +671,9 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   align-items: start;
 }
 .ship-left{ font-weight: 700; color:#2D2A2E; text-align:left; font-size:13px;}
-.ship-right{ font-weight: 700; color:#2D2A2E; text-align:right; word-break:break-all; font-size:13px;}
-#shipTrackPop{ margin-left:1px; opacity:.85; margin-top:4px; text-align:right;}
+.ship-right{ font-weight: 700; color:#2D2A2E; text-align:right; font-size:13px;}
+.ship-card--pop .ship-right { word-break: keep-all; overflow-wrap: normal; }
+#shipTrackPop{ margin-left:1px; opacity:.85; margin-top:4px; text-align:right; display: block;white-space: nowrap;}
 
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
 /* .rc-item .r.wrap { white-space: normal; word-break: keep-all; } */
