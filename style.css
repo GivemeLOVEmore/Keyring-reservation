@@ -640,7 +640,37 @@ h1{ font-size: clamp(24px, 4.5vw, 36px); }
   height: 36px;
   line-height: 1;
 }
-
+/* 팝업 내부 배송 카드 */
+.ship-card--pop{
+  width: 100%;
+  background: var(--card);
+  border: 2px solid var(--fg);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin: 8px 0 10px;
+}
+.ship-title{
+  margin: 0 0 6px;
+  text-align: center;
+  color: var(--fg);
+  font-weight: 800;
+}
+.ship-sub{
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #6B646A;
+  text-align: center;
+}
+.ship-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+  align-items: start;
+}
+.ship-left{ font-weight: 700; color:#2D2A2E; text-align:left; }
+.ship-right{ color:#2D2A2E; text-align:right; word-break:break-all; }
+#shipTrackPop{ margin-left:4px; opacity:.85; }
 
 /* === 필요 시: 특정 행은 줄바꿈 허용하고 싶다면 이 클래스를 추가 === */
 /* .rc-item .r.wrap { white-space: normal; word-break: keep-all; } */
